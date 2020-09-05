@@ -1,0 +1,25 @@
+{
+  "comment"    : "see source code if in doubt about settings",
+
+  "WIDTH"      : 400,
+  "HEIGHT"     : 300,
+
+  "HEIGHT_E"   :  40,
+  "HEIGHT_S"   :  19,
+  "MARGINS"    : [5,5,5,5],
+
+  "TITLE"      : "Daily Agenda",
+  "TITLE_FONT" : "/usr/share/fonts/truetype/DejaVuSans-BoldOblique.ttf",
+  "TITLE_COLOR": 0,
+
+  "DAY_FONT"   : "/usr/share/fonts/truetype/DejaVuSerif-Bold.ttf",
+  "DAY_COLOR"  : 255,
+  "DAY_COLOR_BG" : 128,
+
+  "TEXT_FONT"  : "/usr/share/fonts/truetype/DejaVuSerif.ttf",
+  "TEXT_COLOR" : 0,
+  "TEXT_COLOR_I" : 255,
+  "TEXT_COLOR_BG" : 192,
+
+  "LINE_COLOR" : 64
+}
