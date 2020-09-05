@@ -23,6 +23,12 @@ import argparse
 import sys, os, datetime, locale, json
 from PIL import Image, ImageDraw, ImageFont
 
+try:
+  from inky.auto import auto
+  inky_available = True
+except:
+  inky_available = False
+  
 # ----------------------------------------------------------------------------
 # --- helper class to convert a dict to an object   --------------------------
 
@@ -164,6 +170,17 @@ class DailyAgenda(object):
   def show(self):
     """ show current screen on device """
 
+    if inky_available:
+      try:
+        display = auto()
+        display.set_image(self._image)
+        display.set_border(inky.WHITE)
+        display.show()
+        return
+      except:
+        pass
+
+    # fallback to direct display using PIL default viewer
     self._image.show()
 
 # --- main program   ----------------------------------------------------------
