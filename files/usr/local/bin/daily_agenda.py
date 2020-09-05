@@ -32,33 +32,7 @@ class DailyAgenda(object):
   # --- constructor   --------------------------------------------------------
 
   def __init__(self):
-
-    # default options
-    self._options = {
-      "WIDTH"      : 400,         # screen width
-      "HEIGHT"     : 300,         # screen height
-      "HEIGHT_E"   :  40,         # height of agenda entry
-      "HEIGHT_S"   :  19,         # offset from bottom of status line
-      "MARGINS"    : (5,5,5,5),   # (top,bottom,left,right)
-
-      "TITLE"      : "Daily Agenda",
-      "TITLE_FONT" : "/usr/share/fonts/truetype/DejaVuSans-BoldOblique.ttf",
-      "TITLE_COLOR": 0,
-
-
-      "DAY_FONT"   : "/usr/share/fonts/truetype/DejaVuSerif-Bold.ttf",
-      "DAY_COLOR"  : 255,
-      "DAY_COLOR_BG" : 128,
-
-      "TEXT_FONT"  : "/usr/share/fonts/truetype/DejaVuSerif.ttf",
-      "TEXT_COLOR" : 0,
-      "TEXT_COLOR_I" : 255,
-      "TEXT_COLOR_BG" : 192,
-
-      "LINE_COLOR" : 64
-      }
-
-    self._read_settings()
+    self._read_settings()         # creates self._options
     self._create_fonts()
 
     # application objects
@@ -73,9 +47,9 @@ class DailyAgenda(object):
   def _read_settings(self):
     """ read settings from /etc/pi-e-ink-daily.json """
 
-  if os.path.exists(CONFIG_FILE):
-    with open(CONFIG_FILE,"r") as f:
-      self._options = json.load(f)
+    if os.path.exists(CONFIG_FILE):
+      with open(CONFIG_FILE,"r") as f:
+        self._options = json.load(f)
 
   # --- create fonts   -----------------------------------------------------
 
@@ -162,8 +136,6 @@ class DailyAgenda(object):
     # ending line
     self._y_off += self._options["HEIGHT_E"] + 2
     self._draw_hline(self._y_off)
-
-    print("y_off: %d" % self._y_off)
 
   # --- status line   -------------------------------------------------------
 
