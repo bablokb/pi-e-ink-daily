@@ -4,7 +4,7 @@
   "WIDTH"      : 400,
   "HEIGHT"     : 300,
 
-  "HEIGHT_E"   :  40,
+  "HEIGHT_E"   :  42,
   "HEIGHT_S"   :  19,
   "MARGINS"    : [5,5,5,5],
 
@@ -21,5 +21,10 @@
   "TEXT_COLOR_I" : 255,
   "TEXT_COLOR_BG" : 192,
 
-  "LINE_COLOR" : 64
+  "LINE_COLOR" : 64,
+
+  "dav_url"  : "https://example.com/caldav.php"
+  "dav_user" : "somebody",
+  "dav_pw"   : "somebodies_password",
+  "cal_name" : "work"
 }
