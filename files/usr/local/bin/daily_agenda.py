@@ -17,10 +17,14 @@
 
 CONFIG_FILE = "/etc/pi-e-ink-daily.json"
 
+import pprint
+
 # --- system-imports   -------------------------------------------------------
 
 import argparse
 import sys, os, datetime, locale, json
+from operator import itemgetter
+
 from PIL import Image, ImageDraw, ImageFont
 import caldav
 import tzlocal
@@ -234,7 +238,6 @@ class DailyAgenda(object):
         if item['dtend'].day != item['dtstart'].day:
           item['dtend'] = tzlocal.get_localzone().localize(end_of_day)
 
-        item['component'] = component
         for attr in ('summary', 'location'):
           if hasattr(component,attr):
             item[attr] = getattr(component,attr).value
@@ -242,12 +245,13 @@ class DailyAgenda(object):
             item[attr] = ""
         agenda_list.append(item)
 
-      entries = []
-      for item in agenda_list:
-        entries.append(("%s-%s" % (item['dtstart'].strftime("%H:%M"),
-                                item['dtend'].strftime("%H:%M")),
-                     (item['summary'],item['location'])))
-      return entries
+    entries = []
+    for item in agenda_list:
+      entries.append(("%s-%s" % (item['dtstart'].astimezone().strftime("%H:%M"),
+                                 item['dtend'].astimezone().strftime("%H:%M")),
+                      (item['summary'],item['location'])))
+    entries.sort(key=itemgetter(0))
+    return entries
 
   # --- extract time attribute   ----------------------------------------------
 
@@ -256,8 +260,8 @@ class DailyAgenda(object):
 
     if hasattr(component,timeattr):
       dt = getattr(component,timeattr).value
-    if not isinstance(dt,datetime.datetime):
-      dt = datetime.datetime(dt.year, dt.month, dt.day)
+      if not isinstance(dt,datetime.datetime):
+        dt = datetime.datetime(dt.year, dt.month, dt.day)
     else:
       dt = default
     if not dt.tzinfo:
