@@ -22,6 +22,8 @@ CONFIG_FILE = "/etc/pi-e-ink-daily.json"
 import argparse
 import sys, os, datetime, locale, json
 from PIL import Image, ImageDraw, ImageFont
+import caldav
+import tzlocal
 
 try:
   from inky.auto import auto
@@ -75,6 +77,13 @@ class DailyAgenda(object):
     self._time_font  = ImageFont.truetype(self._opts.TEXT_FONT,30)
     self._text_font  = ImageFont.truetype(self._opts.TEXT_FONT,15)
 
+  # --- return maximal number of possible entries   ------------------------
+
+  def get_max_entries(self):
+    """ return entries - must be called after dray_day """
+
+    return int((self._opts.HEIGHT-self._opts.HEIGHT_S-self._y_off)/self._opts.HEIGHT_E)
+
   # --- draw a line   ------------------------------------------------------
 
   def _draw_hline(self,y):
@@ -122,7 +131,7 @@ class DailyAgenda(object):
     if shade:
       background = [(0,self._y_off+1),
                     (self._opts.WIDTH,
-                                    self._y_off+self._opts.HEIGHT_E+1)]
+                                    self._y_off+self._opts.HEIGHT_E-1)]
       self._canvas.rectangle(background,
                              fill=self._opts.TEXT_COLOR_BG)
       text_color = self._opts.TEXT_COLOR_I
@@ -148,7 +157,7 @@ class DailyAgenda(object):
                       fill=self._opts.TEXT_COLOR)
 
     # ending line
-    self._y_off += self._opts.HEIGHT_E + 2
+    self._y_off += self._opts.HEIGHT_E
     self._draw_hline(self._y_off)
 
   # --- status line   -------------------------------------------------------
@@ -183,6 +192,78 @@ class DailyAgenda(object):
     # fallback to direct display using PIL default viewer
     self._image.show()
 
+  # --- read agenda from caldav-server   --------------------------------------
+
+  def get_agenda(self):
+    """ read agenda from caldav-server """
+
+    start_of_day = datetime.datetime.combine(datetime.date.today(),
+                                         datetime.time.min)
+    end_of_day   = datetime.datetime.combine(datetime.date.today(),
+                                         datetime.time.max)
+    now          = tzlocal.get_localzone().localize(datetime.datetime.now())
+
+    client = caldav.DAVClient(url=self._opts.dav_url,
+                              username=self._opts.dav_user,
+                              password=self._opts.dav_pw)
+
+    # get calendar by name
+    calendars = client.principal().calendars()
+    cal = next(c for c in calendars if c.name == self._opts.cal_name)
+
+    # extract relevant data
+    cal_events = cal.date_search(start=start_of_day,end=end_of_day,expand=True)
+    agenda_list = []
+    for cal_event in cal_events:
+      item = {}
+      if hasattr(cal_event.instance, 'vtimezone'):
+        tzinfo = cal_event.instance.vtimezone.gettzinfo()
+      else:
+        tzinfo = tzlocal.get_localzone()
+      components = cal_event.instance.components()
+      for component in components:
+        if component.name != 'VEVENT':
+          continue
+        item['dtstart'] = self._get_timeattr(
+          component,'dtstart',start_of_day,tzinfo)
+        item['dtend']   = self._get_timeattr(
+          component,'dtend',end_of_day,tzinfo)
+        if item['dtend'] < now:
+          # ignore old events
+          continue
+        if item['dtend'].day != item['dtstart'].day:
+          item['dtend'] = tzlocal.get_localzone().localize(end_of_day)
+
+        item['component'] = component
+        for attr in ('summary', 'location'):
+          if hasattr(component,attr):
+            item[attr] = getattr(component,attr).value
+          else:
+            item[attr] = ""
+        agenda_list.append(item)
+
+      entries = []
+      for item in agenda_list:
+        entries.append(("%s-%s" % (item['dtstart'].strftime("%H:%M"),
+                                item['dtend'].strftime("%H:%M")),
+                     (item['summary'],item['location'])))
+      return entries
+
+  # --- extract time attribute   ----------------------------------------------
+
+  def _get_timeattr(self,component,timeattr,default,tzinfo):
+    """ extract time attribute """
+
+    if hasattr(component,timeattr):
+      dt = getattr(component,timeattr).value
+    if not isinstance(dt,datetime.datetime):
+      dt = datetime.datetime(dt.year, dt.month, dt.day)
+    else:
+      dt = default
+    if not dt.tzinfo:
+      dt = tzinfo.localize(dt)
+    return dt
+
 # --- main program   ----------------------------------------------------------
 
 if __name__ == '__main__':
@@ -191,7 +272,16 @@ if __name__ == '__main__':
   screen = DailyAgenda()
   screen.draw_title()
   screen.draw_day()
-  for i in range(5):
-    screen.draw_entry("12:33",["Wichtiger Termin","Nr. %d" % i],i%2)
+
+  entries = screen.get_agenda()
+  shade = False
+  count = 0
+  for entry in entries:
+    screen.draw_entry(*entry,shade=shade)
+    shade  = not shade
+    count += count
+    if count > screen.get_max_entries():
+      break
+
   screen.draw_status()
   screen.show()
