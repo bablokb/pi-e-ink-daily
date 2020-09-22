@@ -152,7 +152,7 @@ class DailyAgenda(object):
                       tm[0],font=self._time_font,
                       fill=self._opts.TEXT_COLOR)
     tm_size[1] = self._canvas.textsize(tm[1],self._time_font,spacing=0)
-    self._canvas.text((self._opts.MARGINS[2],self._y_off+2+tm_size[0][1]),
+    self._canvas.text((self._opts.MARGINS[2],self._y_off+4+tm_size[0][1]),
                       tm[1],font=self._time_font,
                       fill=self._opts.TEXT_COLOR)
 
