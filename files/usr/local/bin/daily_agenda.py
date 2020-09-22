@@ -230,8 +230,12 @@ class DailyAgenda(object):
           continue
         item['dtstart'] = self._get_timeattr(
           component,'dtstart',start_of_day,tzinfo)
-        item['dtend']   = self._get_timeattr(
-          component,'dtend',end_of_day,tzinfo)
+        if hasattr(component,'duration'):
+          duration = getattr(component,'duration').value
+          item['dtend'] = item['dtstart'] + duration
+        else:
+          item['dtend']   = self._get_timeattr(
+            component,'dtend',end_of_day,tzinfo)
         if item['dtend'] < now:
           # ignore old events
           continue
