@@ -78,7 +78,7 @@ class DailyAgenda(object):
 
     self._title_font = ImageFont.truetype(self._opts.TITLE_FONT,35)
     self._day_font   = ImageFont.truetype(self._opts.DAY_FONT,60)
-    self._time_font  = ImageFont.truetype(self._opts.TEXT_FONT,30)
+    self._time_font  = ImageFont.truetype(self._opts.TEXT_FONT,15)
     self._text_font  = ImageFont.truetype(self._opts.TEXT_FONT,15)
 
   # --- return maximal number of possible entries   ------------------------
@@ -141,13 +141,19 @@ class DailyAgenda(object):
       text_color = self._opts.TEXT_COLOR_I
   
     # time-value
-    time_size = self._canvas.textsize(e_time,self._time_font,spacing=0)
-    self._canvas.text((self._opts.MARGINS[2],self._y_off),
-                      e_time,font=self._time_font,
+    tm      = e_time.split('-')
+    tm_size = [0,0]
+    tm_size[0] = self._canvas.textsize(tm[0],self._time_font,spacing=0)
+    self._canvas.text((self._opts.MARGINS[2],self._y_off+2),
+                      tm[0],font=self._time_font,
+                      fill=self._opts.TEXT_COLOR)
+    tm_size[1] = self._canvas.textsize(tm[1],self._time_font,spacing=0)
+    self._canvas.text((self._opts.MARGINS[2],self._y_off+2+tm_size[0][1]),
+                      tm[1],font=self._time_font,
                       fill=self._opts.TEXT_COLOR)
 
     # text (2 lines)
-    txt_x_off = self._opts.MARGINS[2] + time_size[0] + 4
+    txt_x_off = self._opts.MARGINS[2] + max(tm_size[0][0],tm_size[1][0]) + 4
     txt_y_off = self._y_off + 2
     text_size = self._canvas.textsize(e_text[0],
                                       self._text_font,spacing=0)
