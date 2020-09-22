@@ -76,10 +76,14 @@ class DailyAgenda(object):
   def _create_fonts(self):
     """ create fonts """
 
-    self._title_font = ImageFont.truetype(self._opts.TITLE_FONT,35)
-    self._day_font   = ImageFont.truetype(self._opts.DAY_FONT,60)
-    self._time_font  = ImageFont.truetype(self._opts.TIME_FONT,18)
-    self._text_font  = ImageFont.truetype(self._opts.TEXT_FONT,18)
+    self._title_font = ImageFont.truetype(self._opts.TITLE_FONT,
+                                          self._opts.TITLE_SIZE)
+    self._day_font   = ImageFont.truetype(self._opts.DAY_FONT,
+                                          self._opts.DAY_SIZE)
+    self._time_font  = ImageFont.truetype(self._opts.TIME_FONT,
+                                          self._opts.TIME_SIZE)
+    self._text_font  = ImageFont.truetype(self._opts.TEXT_FONT,
+                                          self._opts.TEXT_SIZE)
 
   # --- return maximal number of possible entries   ------------------------
 
