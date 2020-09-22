@@ -78,8 +78,8 @@ class DailyAgenda(object):
 
     self._title_font = ImageFont.truetype(self._opts.TITLE_FONT,35)
     self._day_font   = ImageFont.truetype(self._opts.DAY_FONT,60)
-    self._time_font  = ImageFont.truetype(self._opts.TEXT_FONT,15)
-    self._text_font  = ImageFont.truetype(self._opts.TEXT_FONT,15)
+    self._time_font  = ImageFont.truetype(self._opts.TIME_FONT,18)
+    self._text_font  = ImageFont.truetype(self._opts.TEXT_FONT,18)
 
   # --- return maximal number of possible entries   ------------------------
 

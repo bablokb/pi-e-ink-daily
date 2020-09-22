@@ -16,6 +16,11 @@
   "DAY_COLOR"  : 255,
   "DAY_COLOR_BG" : 128,
 
+  "TIME_FONT"  : "/usr/share/fonts/truetype/DejaVuSerif-BoldItalic.ttf",
+  "TIME_COLOR" : 0,
+  "TIME_COLOR_I" : 255,
+  "TIME_COLOR_BG" : 192,
+
   "TEXT_FONT"  : "/usr/share/fonts/truetype/DejaVuSerif.ttf",
   "TEXT_COLOR" : 0,
   "TEXT_COLOR_I" : 255,
