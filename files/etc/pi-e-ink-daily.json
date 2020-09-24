@@ -9,22 +9,22 @@
   "MARGINS"    : [5,5,5,5],
 
   "TITLE"      : "Daily Agenda",
-  "TITLE_FONT" : "/usr/share/fonts/truetype/DejaVuSans-BoldOblique.ttf",
+  "TITLE_FONT" : "/usr/share/fonts/truetype/dejavu/DejaVuSans-BoldOblique.ttf",
   "TITLE_COLOR":  0,
   "TITLE_SIZE" : 35,
 
-  "DAY_FONT"   : "/usr/share/fonts/truetype/DejaVuSerif-Bold.ttf",
+  "DAY_FONT"   : "/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf",
   "DAY_COLOR"  : 255,
   "DAY_SIZE"   :  60,
   "DAY_COLOR_BG" : 128,
 
-  "TIME_FONT"  : "/usr/share/fonts/truetype/DejaVuSerif-BoldItalic.ttf",
+  "TIME_FONT"  : "/usr/share/fonts/truetype/dejavu/DejaVuSerif-BoldItalic.ttf",
   "TIME_COLOR" :  0,
   "TIME_SIZE"  : 18,
   "TIME_COLOR_I" : 255,
   "TIME_COLOR_BG" : 192,
 
-  "TEXT_FONT"  : "/usr/share/fonts/truetype/DejaVuSerif.ttf",
+  "TEXT_FONT"  : "/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf",
   "TEXT_COLOR" : 0,
   "TEXT_SIZE"  : 18,
   "TEXT_COLOR_I" : 255,
