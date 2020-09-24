@@ -3,8 +3,6 @@
 # ----------------------------------------------------------------------------
 # pi-e-ink-daily: daily agenda on a wHat e-ink display
 #
-# TODO: font-sizes -> options
-#
 # The code is configurable for any display - you must only update the
 # display output.
 #
