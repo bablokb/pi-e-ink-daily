@@ -9,8 +9,8 @@
 #
 # --------------------------------------------------------------------------
 
-PACKAGES="python3-pip python3-tz python3-tzlocal libopenjp2-7 libtiff5 libxslt1.1 fonts-dejavu"
-PACKAGES_PIP="pillow inky caldav"
+PACKAGES="python3-pil python3-numpy python3-rpi.gpio python3-spidev python3-pip python3-tz python3-tzlocal libxslt1.1 fonts-dejavu"
+PACKAGES_PIP="smbus2 inky caldav"
 PROJECT="pi-e-ink-daily"
 
 # --- basic packages   ------------------------------------------------------
@@ -82,7 +82,12 @@ install_files() {
 # --- configure system   ----------------------------------------------------
 
 configure_system() {
-  :
+  # update /boot/config.txt
+  if ! grep -q "^dtparam=spi=on" /boot/config.txt ; then
+    echo -e "[INFO] configuring spi in /boot/config.txt" 2>&1
+    echo "dtparam=spi=on" >> /boot/config.txt
+    echo -e "[INFO] please reboot your system" 2>&1
+  fi
 }
 
 # --- activate service   ----------------------------------------------------
@@ -97,7 +102,7 @@ enable_services() {
 install_packages
 
 install_files
-#configure_system
+configure_system
 #enable_services
 
 echo "[INFO] installation completed"
