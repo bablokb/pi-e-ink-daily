@@ -55,7 +55,8 @@ class DailyAgenda(object):
 
     # application objects
     self._image  = Image.new("P",
-                             (self._opts.WIDTH,self._opts.HEIGHT))
+                             (self._opts.WIDTH,self._opts.HEIGHT),
+                             color=self._opts.BORDER_COLOR)
     self._canvas = ImageDraw.Draw(self._image)
     self._y_off  = 0
 
@@ -67,7 +68,16 @@ class DailyAgenda(object):
     if os.path.exists(CONFIG_FILE):
       with open(CONFIG_FILE,"r") as f:
         options = json.load(f)
-        self._opts = Options(options)
+
+    # map all color-attributes
+    if not inky_available:
+      cmap = {'0': 255, '1': 0, '2': 192 }
+      for opt in options:
+        if '_COLOR' in opt:
+          options[opt] = cmap[str(options[opt])]
+
+    # convert to attributes
+    self._opts = Options(options)
 
   # --- create fonts   -----------------------------------------------------
 
@@ -148,11 +158,11 @@ class DailyAgenda(object):
     tm_size[0] = self._canvas.textsize(tm[0],self._time_font,spacing=0)
     self._canvas.text((self._opts.MARGINS[2],self._y_off+2),
                       tm[0],font=self._time_font,
-                      fill=self._opts.TEXT_COLOR)
+                      fill=self._opts.TIME_COLOR)
     tm_size[1] = self._canvas.textsize(tm[1],self._time_font,spacing=0)
     self._canvas.text((self._opts.MARGINS[2],self._y_off+4+tm_size[0][1]),
                       tm[1],font=self._time_font,
-                      fill=self._opts.TEXT_COLOR)
+                      fill=self._opts.TIME_COLOR)
 
     # text (2 lines)
     txt_x_off = self._opts.MARGINS[2] + max(tm_size[0][0],tm_size[1][0]) + 4
@@ -193,17 +203,16 @@ class DailyAgenda(object):
 
     if inky_available:
       try:
-        display = InkyWHAT(self._opts.COLOR)
-        display.set_border(display.WHITE)
+        display = InkyWHAT(self._opts.DISP_TYPE)
+        display.set_border(self._opts.BORDER_COLOR)
         display.set_image(self._image)
         display.show()
         return
       except:
         traceback.print_exc()
-        pass
 
     # fallback to direct display using PIL default viewer
-    self._image.show() == 1
+    self._image.show()
 
   # --- read agenda from caldav-server   --------------------------------------
 
@@ -217,8 +226,8 @@ class DailyAgenda(object):
     now          = tzlocal.get_localzone().localize(datetime.datetime.now())
 
     client = caldav.DAVClient(url=self._opts.dav_url,
-                              username=self._opts.dav_user,
-                              password=self._opts.dav_pw)
+                                username=self._opts.dav_user,
+                                password=self._opts.dav_pw)
 
     # get calendar by name
     calendars = client.principal().calendars()
@@ -290,7 +299,12 @@ if __name__ == '__main__':
   screen.draw_title()
   screen.draw_day()
 
-  entries = screen.get_agenda()
+  try:
+    entries = screen.get_agenda()
+  except:
+    traceback.print_exc()
+    entries = []
+
   shade = False
   count = 0
   for entry in entries:
