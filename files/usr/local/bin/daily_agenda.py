@@ -193,7 +193,7 @@ class DailyAgenda(object):
 
     if inky_available:
       try:
-        display = InkyWHAT('black')
+        display = InkyWHAT(self._opts.COLOR)
         display.set_border(display.WHITE)
         display.set_image(self._image)
         display.show()
