@@ -1,0 +1,28 @@
+# --------------------------------------------------------------------------
+# Systemd service Definition for pi-e-ink-daily.service.
+#
+# The service starts multipe scripts:
+#    /usr/local/bin/daily_agenda.py  - update e-ink-display
+#    /usr/bin/systemctl poweroff     - shutdown system
+#
+# Author: Bernhard Bablok
+# License: GPL3
+#
+# Website: https://github.com/bablokb/pi-e-ink-display
+#
+# --------------------------------------------------------------------------
+
+[Unit]
+Description=Update Daily-Agenda on E-Ink Display
+Requires=network-online.target
+After=network-online.target
+Wants=network-online.target
+ 
+[Service]
+Type=oneshot
+RemainAfterExit=true
+ExecStart=/usr/local/bin/daily_agenda.py
+ExecStart=/bin/systemctl poweroff
+
+[Install]
+WantedBy=multi-user.target
