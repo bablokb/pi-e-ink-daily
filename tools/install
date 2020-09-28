@@ -103,6 +103,6 @@ install_packages
 
 install_files
 configure_system
-#enable_services
+enable_services
 
 echo "[INFO] installation completed"
