@@ -15,7 +15,7 @@
 
 CONFIG_FILE = "/etc/pi-e-ink-daily.json"
 
-import pprint
+import pprint, traceback
 
 # --- system-imports   -------------------------------------------------------
 
@@ -28,11 +28,12 @@ import caldav
 import tzlocal
 
 try:
-  from inky.auto import auto
+  from inky import InkyWHAT
   inky_available = True
-except:
+except Exception:
+#  traceback.print_exc()
   inky_available = False
-  
+
 # ----------------------------------------------------------------------------
 # --- helper class to convert a dict to an object   --------------------------
 
@@ -53,9 +54,8 @@ class DailyAgenda(object):
     self._create_fonts()
 
     # application objects
-    self._image  = Image.new("L",
-                             (self._opts.WIDTH,self._opts.HEIGHT),
-                             255)
+    self._image  = Image.new("P",
+                             (self._opts.WIDTH,self._opts.HEIGHT))
     self._canvas = ImageDraw.Draw(self._image)
     self._y_off  = 0
 
@@ -193,16 +193,17 @@ class DailyAgenda(object):
 
     if inky_available:
       try:
-        display = auto()
+        display = InkyWHAT('black')
+        display.set_border(display.WHITE)
         display.set_image(self._image)
-        display.set_border(inky.WHITE)
         display.show()
         return
       except:
+        traceback.print_exc()
         pass
 
     # fallback to direct display using PIL default viewer
-    self._image.show()
+    self._image.show() == 1
 
   # --- read agenda from caldav-server   --------------------------------------
 
