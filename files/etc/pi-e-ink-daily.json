@@ -3,6 +3,7 @@
 
   "WIDTH"      : 400,
   "HEIGHT"     : 300,
+  "COLOR"      : "black",
 
   "HEIGHT_E"   :  42,
   "HEIGHT_S"   :  19,
