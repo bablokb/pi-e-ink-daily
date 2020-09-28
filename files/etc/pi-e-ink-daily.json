@@ -11,7 +11,7 @@
   "HEIGHT_S"     : 19,
   "MARGINS"      : [5,5,5,5],
 
-  "TITLE"        : "Daily Agenda",
+  "TITLE"        : "",
   "TITLE_FONT"   : "/usr/share/fonts/truetype/dejavu/DejaVuSans-BoldOblique.ttf",
   "TITLE_COLOR"  :  1,
   "TITLE_SIZE"   : 35,
