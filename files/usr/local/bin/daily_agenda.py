@@ -113,7 +113,12 @@ class DailyAgenda(object):
   def draw_title(self):
     """ Draw title """
 
-    self._canvas.text((20,20),self._opts.TITLE,
+    if self._opts.TITLE:
+      title = self._opts.TITLE
+    else:
+      title = datetime.datetime.now().strftime("%B")  # month
+
+    self._canvas.text((20,20),title,
                       font=self._title_font,
                       fill=self._opts.TITLE_COLOR)
 
