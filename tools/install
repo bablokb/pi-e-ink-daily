@@ -88,6 +88,11 @@ configure_system() {
     echo "dtparam=spi=on" >> /boot/config.txt
     echo -e "[INFO] please reboot your system" 2>&1
   fi
+  if ! grep -q "^dtoverlay=gpio-poweroff" /boot/config.txt ; then
+    echo -e "[INFO] configuring gpio-poweroff for GPIO4 in /boot/config.txt" 2>&1
+    echo "dtoverlay=gpio-poweroff,gpiopin=4" >> /boot/config.txt
+    echo -e "[INFO] please reboot your system" 2>&1
+  fi
 }
 
 # --- activate service   ----------------------------------------------------
