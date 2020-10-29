@@ -35,7 +35,7 @@
 
   "LINE_COLOR"   : 2,
 
-  "dav_url"      : "https://example.com/caldav.php"
+  "dav_url"      : "https://example.com/caldav.php",
   "dav_user"     : "somebody",
   "dav_pw"       : "somebodies_password",
   "cal_name"     : "mycal"
