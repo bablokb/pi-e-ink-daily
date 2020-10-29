@@ -43,7 +43,7 @@ Optional components:
   - a LiPo battery
   - a DC-DC converter (e.g. a PowerBoost 500C from Adafruit)
   - battery-management pcb (see above)
-  - 3D-printed [stand](https://tinkercad.com/xxxx)
+  - 3D-printed [stand](https://www.tinkercad.com/things/f5TTT5WoGkW)
 
 A normal update-cycle with some boot-time optimizations takes about one
 minute. System-boot is more than half of this time, another 15 seconds are lost
