@@ -15,7 +15,7 @@
 
 CONFIG_FILE = "/etc/pi-e-ink-daily.json"
 
-import pprint, traceback
+import traceback
 
 # --- system-imports   -------------------------------------------------------
 
@@ -31,7 +31,7 @@ try:
   from inky import InkyWHAT
   inky_available = True
 except Exception:
-#  traceback.print_exc()
+  # traceback.print_exc()
   inky_available = False
 
 # ----------------------------------------------------------------------------
