@@ -1,5 +1,8 @@
 {
   "comment"      : "see source code if in doubt about settings",
+
+  "no_shutdown_on_error" : 0,
+
   "colors"       : "white: 0, black: 1, red/yellow/gray: 2",
 
   "WIDTH"        : 400,
