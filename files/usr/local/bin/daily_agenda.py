@@ -51,6 +51,7 @@ class DailyAgenda(object):
 
   def __init__(self):
     self._read_settings()         # creates self._options
+    self.rc = 0                   # return-code
     self._create_fonts()
 
     # application objects
@@ -212,9 +213,10 @@ class DailyAgenda(object):
         display.set_border(self._opts.BORDER_COLOR)
         display.set_image(self._image)
         display.show()
-        return
       except:
         traceback.print_exc()
+        self.rc = 3
+      return
 
     # fallback to direct display using PIL default viewer
     self._image.show()
@@ -308,6 +310,7 @@ if __name__ == '__main__':
     entries = screen.get_agenda()
   except:
     traceback.print_exc()
+    screen.rc = 3
     entries = []
 
   shade = False
@@ -321,3 +324,7 @@ if __name__ == '__main__':
 
   screen.draw_status()
   screen.show()
+  if screen._opts.no_shutdown_on_error and screen.rc > 0:
+    sys.exit(screen.rc)
+  else:
+    sys.exit(0)
