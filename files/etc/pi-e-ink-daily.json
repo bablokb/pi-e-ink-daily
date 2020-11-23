@@ -2,6 +2,8 @@
   "comment"      : "see source code if in doubt about settings",
 
   "no_shutdown_on_error" : 0,
+  "no_server_connection" : "/usr/local/share/pi-e-ink-daily/no-server-connection.png",
+  "no_events" : "/usr/local/share/pi-e-ink-daily/empty-agenda.png",
 
   "colors"       : "white: 0, black: 1, red/yellow/gray: 2",
 
