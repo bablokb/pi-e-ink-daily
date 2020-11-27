@@ -80,6 +80,14 @@ class DailyAgenda(object):
     # convert to attributes
     self._opts = Options(options)
 
+    # path to images
+    pgm_dir = os.path.dirname(os.path.realpath(__file__))
+    img_dir = os.path.realpath(os.path.join(pgm_dir,"..",
+                                            "share","pi-e-ink-daily"))
+
+    self.NO_CONNECT = os.path.join(img_dir,self._opts.no_server_connection)
+    self.NO_EVENTS  = os.path.join(img_dir,self._opts.no_events)
+
   # --- create fonts   -----------------------------------------------------
 
   def _create_fonts(self):
@@ -187,6 +195,23 @@ class DailyAgenda(object):
     # ending line
     self._y_off += self._opts.HEIGHT_E
     self._draw_hline(self._y_off)
+
+  # --- overlay image   -----------------------------------------------------
+
+  def draw_image(self,path):
+    """ draw image """
+
+    # load image
+    try:
+      image = Image.open(path)
+      x_off = int((self._opts.WIDTH - image.width)/2)
+      y_off = self._y_off + int((self._opts.HEIGHT - self._y_off -
+               self._opts.HEIGHT_S - image.height)/2)
+      self._image.paste(image,box=(x_off,y_off))
+      image.close()
+    except:
+      traceback.print_exc()
+      return
 
   # --- status line   -------------------------------------------------------
 
@@ -311,16 +336,20 @@ if __name__ == '__main__':
   except:
     traceback.print_exc()
     screen.rc = 3
-    entries = []
 
-  shade = False
-  count = 0
-  for entry in entries:
-    screen.draw_entry(*entry,shade=shade)
-    shade  = not shade
-    count += count
-    if count > screen.get_max_entries():
-      break
+  if screen.rc:
+    screen.draw_image(screen.NO_CONNECT)
+  elif len(entries):
+    shade = False
+    count = 0
+    for entry in entries:
+      screen.draw_entry(*entry,shade=shade)
+      shade  = not shade
+      count += count
+      if count > screen.get_max_entries():
+        break
+  else:
+    screen.draw_image(screen.NO_EVENTS)
 
   screen.draw_status()
   screen.show()
