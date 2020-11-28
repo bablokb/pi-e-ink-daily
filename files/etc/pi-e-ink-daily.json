@@ -9,7 +9,6 @@
 
   "WIDTH"        : 400,
   "HEIGHT"       : 300,
-  "DISP_TYPE"    : "black",
   "BORDER_COLOR" : 0,
 
   "HEIGHT_E"     : 42,
