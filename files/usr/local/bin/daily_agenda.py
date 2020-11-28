@@ -28,7 +28,7 @@ import caldav
 import tzlocal
 
 try:
-  from inky import InkyWHAT
+  from inky.auto import auto
   inky_available = True
 except Exception:
   # traceback.print_exc()
@@ -55,6 +55,11 @@ class DailyAgenda(object):
     self._create_fonts()
 
     # application objects
+    if inky_available:
+      self._display = auto()
+      self._opts.WIDTH=self._display.width
+      self._opts.HEIGHT=self._display.height
+
     self._image  = Image.new("P",
                              (self._opts.WIDTH,self._opts.HEIGHT),
                              color=self._opts.BORDER_COLOR)
@@ -234,10 +239,9 @@ class DailyAgenda(object):
 
     if inky_available:
       try:
-        display = InkyWHAT(self._opts.DISP_TYPE)
-        display.set_border(self._opts.BORDER_COLOR)
-        display.set_image(self._image)
-        display.show()
+        self._display.set_border(self._opts.BORDER_COLOR)
+        self._display.set_image(self._image)
+        self._display.show()
       except:
         traceback.print_exc()
         self.rc = 3
