@@ -50,7 +50,7 @@ class DailyAgenda(object):
   # --- constructor   --------------------------------------------------------
 
   def __init__(self):
-    self._read_settings()         # creates self._options
+    self._read_settings()         # creates self._opts
     self.rc = 0                   # return-code
     self._create_fonts()
 
@@ -250,9 +250,20 @@ class DailyAgenda(object):
     # fallback to direct display using PIL default viewer
     self._image.show()
 
-  # --- read agenda from caldav-server   --------------------------------------
+  # --- read agendas from caldav-servers   ------------------------------------
 
   def get_agenda(self):
+    """ read agenda for all configured calendars """
+
+    entries = []
+    for cal_info in self._opts.cals:
+      self._get_agenda_for_cal(cal_info,entries)
+    entries.sort(key=itemgetter(0))
+    return entries
+
+  # --- read agenda from caldav-server   --------------------------------------
+
+  def _get_agenda_for_cal(self,cal_info,entries):
     """ read agenda from caldav-server """
 
     start_of_day = datetime.datetime.combine(datetime.date.today(),
@@ -261,13 +272,13 @@ class DailyAgenda(object):
                                          datetime.time.max)
     now          = tzlocal.get_localzone().localize(datetime.datetime.now())
 
-    client = caldav.DAVClient(url=self._opts.dav_url,
-                                username=self._opts.dav_user,
-                                password=self._opts.dav_pw)
+    client = caldav.DAVClient(url=cal_info["dav_url"],
+                                username=cal_info["dav_user"],
+                                password=cal_info["dav_pw"])
 
     # get calendar by name
     calendars = client.principal().calendars()
-    cal = next(c for c in calendars if c.name == self._opts.cal_name)
+    cal = next(c for c in calendars if c.name == cal_info["cal_name"])
 
     # extract relevant data
     cal_events = cal.date_search(start=start_of_day,end=end_of_day,expand=True)
@@ -303,13 +314,10 @@ class DailyAgenda(object):
             item[attr] = ""
         agenda_list.append(item)
 
-    entries = []
     for item in agenda_list:
       entries.append(("%s-%s" % (item['dtstart'].astimezone().strftime("%H:%M"),
                                  item['dtend'].astimezone().strftime("%H:%M")),
                       (item['summary'],item['location'])))
-    entries.sort(key=itemgetter(0))
-    return entries
 
   # --- extract time attribute   ----------------------------------------------
 
