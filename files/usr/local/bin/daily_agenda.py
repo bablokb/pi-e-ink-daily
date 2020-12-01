@@ -158,18 +158,14 @@ class DailyAgenda(object):
 
   # --- agenda entry   ------------------------------------------------------
 
-  def draw_entry(self,e_time,e_text,shade=False):
+  def draw_entry(self,e_time,e_text,e_color):
     """ draw a single agenda entry """
 
     # background
-    text_color = self._opts.TEXT_COLOR
-    if shade:
-      background = [(0,self._y_off+1),
+    background = [(0,self._y_off+1),
                     (self._opts.WIDTH,
                                     self._y_off+self._opts.HEIGHT_E-1)]
-      self._canvas.rectangle(background,
-                             fill=self._opts.TEXT_COLOR_BG)
-      text_color = self._opts.TEXT_COLOR_I
+    self._canvas.rectangle(background,fill=e_color)
   
     # time-value
     tm      = e_time.split('-')
@@ -352,11 +348,9 @@ if __name__ == '__main__':
   if screen.rc:
     screen.draw_image(screen.NO_CONNECT)
   elif len(entries):
-    shade = False
     count = 0
     for entry in entries:
-      screen.draw_entry(*entry,shade=shade)
-      shade  = not shade
+      screen.draw_entry(*entry)
       count += count
       if count > screen.get_max_entries():
         break
