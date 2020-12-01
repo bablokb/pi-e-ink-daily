@@ -317,7 +317,7 @@ class DailyAgenda(object):
     for item in agenda_list:
       entries.append(("%s-%s" % (item['dtstart'].astimezone().strftime("%H:%M"),
                                  item['dtend'].astimezone().strftime("%H:%M")),
-                      (item['summary'],item['location'])))
+                      (item['summary'],item['location']),cal_info["cal_color"]))
 
   # --- extract time attribute   ----------------------------------------------
 
