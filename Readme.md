@@ -5,9 +5,12 @@ Display Daily Agenda on an E-Ink Display
 Overview
 --------
 
-This is a project using a Raspberry Pi and an Inky-wHat from Pimoroni
-for a display of the daily agenda of a calendar. The calendar must be
-accessible via CALDAV, but this is usually the case.
+This is a project using a Raspberry Pi and an Inky-wHat (3 colors) or
+Inky-Impression (7 colors) from Pimoroni for a display of the daily
+agenda of one or more calendars. Porting to other hardware should be
+straightforward.
+
+The calendars must be accessible via CALDAV, but this is usually the case.
 
 ![](calendar.jpg)
 
@@ -36,7 +39,7 @@ Hardware
 The minimal list of required hardware is short:
 
   - a Raspberry Pi Zero
-  - an Inky-wHAT from Pimoroni
+  - an Inky-wHAT or Inky-Impression from Pimoroni
 
 Optional components:
 
@@ -48,11 +51,11 @@ Optional components:
 A normal update-cycle with some boot-time optimizations takes about one
 minute. System-boot is more than half of this time, another 15 seconds are lost
 during initialization of the python3-interpreter, the update of the
-black&white variant of the e-ink takes 8 seconds.
+black&white variant of the wHat takes 8 seconds.
 
-Average power-requirement is 115mA, so the update-cycle draws 2mAh from
-the battery. A normal 1200mAh LiPo should therefore last at least a year
-with a daily update.
+Average power-requirement is 115mA (measured for the wHat), so the
+update-cycle draws 2mAh from the battery. A normal 1200mAh LiPo should
+therefore last at least a year with a daily update.
 
 
 Installation
@@ -64,13 +67,22 @@ To install all necessary software, including the prereqs for the inky, run
     cd pi-e-ink-daily
     sudo tools/install
 
-This will
+You can run this multiple times to update this software. Prereqs,
+e.g. the inky-library, have to be updated manually:
+
+    sudo pip3 install --upgrade inky
+
+Note that you might have to also change you existing configuration file
+(which is not touched) after an update.
+
+The install-command will
 
   - install all necessary packages via apt and pip
   - install the python-script which updates the display from this repo
   - configure a systemd-service which updates the display on boot
     and directly shuts down afterwards
-  - configure the gpio-poweroff overlay in `/boot/config.txt` for GPIO4.
+  - configures spi, i2c and the gpio-poweroff overlay in `/boot/config.txt`
+    for GPIO4.
     Note that this GPIO is available on the back of the wHat and must
     be connected to the battery-management pcb.
 
@@ -88,7 +100,12 @@ CALDAV-settings:
     "dav_url"      : "https://example.com/caldav.php",
     "dav_user"     : "somebody",
     "dav_pw"       : "somebodies_password",
-    "cal_name"     : "mycal"
+    "cal_name"     : "mycal",
+    "cal_color"    : "white"
+
+Note you can query multiple calendars. Using a different color
+than white for the background of the agenda-entry (`cal_color`)
+is not recommended for a wHat.
 
 A note on the TITLE-setting:
 
@@ -96,8 +113,9 @@ A note on the TITLE-setting:
 
 If this variable is the empty string, the title will show the current month.
 
-During tests you might want to remove the instant shutdown from the
-systemd-service file `/etc/systemd/system/pi-e-ink-daily.service`:
+During tests you might want to disable the service or remove at least
+the instant shutdown from the systemd-service file
+`/etc/systemd/system/pi-e-ink-daily.service`:
 
     [Unit]
     Description=Update Daily-Agenda on E-Ink Display
