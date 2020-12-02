@@ -138,14 +138,16 @@ class DailyAgenda(object):
   def _create_fonts(self):
     """ create fonts """
 
-    self._title_font = ImageFont.truetype(self._opts.TITLE_FONT,
+    self._title_font  = ImageFont.truetype(self._opts.TITLE_FONT,
                                           self._opts.TITLE_SIZE)
-    self._day_font   = ImageFont.truetype(self._opts.DAY_FONT,
+    self._day_font    = ImageFont.truetype(self._opts.DAY_FONT,
                                           self._opts.DAY_SIZE)
-    self._time_font  = ImageFont.truetype(self._opts.TIME_FONT,
+    self._time_font   = ImageFont.truetype(self._opts.TIME_FONT,
                                           self._opts.TIME_SIZE)
-    self._text_font  = ImageFont.truetype(self._opts.TEXT_FONT,
+    self._text_font   = ImageFont.truetype(self._opts.TEXT_FONT,
                                           self._opts.TEXT_SIZE)
+    self._status_font = ImageFont.truetype(self._opts.STATUS_FONT,
+                                          self._opts.STATUS_SIZE)
 
   # --- return maximal number of possible entries   ------------------------
 
@@ -265,8 +267,8 @@ class DailyAgenda(object):
     status_text = "Updated: %s" % datetime.datetime.now().strftime("%x %X")
     self._canvas.text((self._opts.MARGINS[2],status_y+2),
                       status_text,
-                      font=self._text_font,
-                      fill=self._opts.TEXT_COLOR)
+                      font=self._status_font,
+                      fill=self._opts.STATUS_COLOR)
 
   # --- show image   ---------------------------------------------------------
 
