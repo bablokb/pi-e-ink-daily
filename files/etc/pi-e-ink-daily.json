@@ -35,6 +35,10 @@
   "TEXT_COLOR_I" : "black",
   "TEXT_COLOR_BG": "gray",
 
+  "STATUS_FONT"  : "/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf",
+  "STATUS_COLOR" : "black",
+  "STATUS_SIZE"  : 18,
+
   "LINE_COLOR"   : "gray",
 
   "cals" : [ {
