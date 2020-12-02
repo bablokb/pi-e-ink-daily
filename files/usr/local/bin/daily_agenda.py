@@ -60,9 +60,14 @@ class DailyAgenda(object):
       self._opts.WIDTH=self._display.width
       self._opts.HEIGHT=self._display.height
 
-    self._image  = Image.new("P",
+      self._image  = Image.new("P",
                              (self._opts.WIDTH,self._opts.HEIGHT),
                              color=self._opts.BORDER_COLOR)
+    else:
+      self._image  = Image.new("RGB",
+                             (self._opts.WIDTH,self._opts.HEIGHT),
+                             color=self._opts.BORDER_COLOR)
+
     self._canvas = ImageDraw.Draw(self._image)
     self._y_off  = 0
 
@@ -76,11 +81,44 @@ class DailyAgenda(object):
         options = json.load(f)
 
     # map all color-attributes
-    if not inky_available:
-      cmap = {'0': 255, '1': 0, '2': 192 }
-      for opt in options:
-        if '_COLOR' in opt:
-          options[opt] = cmap[str(options[opt])]
+    if inky_available:
+      if self._display.colour == "multi":
+        cmap = {'white' : self._display.WHITE,
+                'black' : self._display.BLACK,
+                'gray'  : self._display.RED,        # for Inky-wHat black&white compat
+                'red'   : self._display.RED,
+                'yellow': self._display.YELLOW,
+                'green' : self._display.GREEN,
+                'blue'  : self._display.BLUE,
+                'orange': self._display.ORANGE
+                }
+      else:
+        cmap = {'white' : self._display.WHITE,
+                'black' : self._display.BLACK,
+                'gray'  : self._display.RED,        # for Inky-wHat compat
+                'red'   : self._display.RED,
+                'yellow': self._display.RED,
+                'green' : self._display.RED,
+                'blue'  : self._display.RED,
+                'orange': self._display.RED
+                }
+    else:
+      cmap = {'white' : (255,255,255),
+              'black' : (0,0,0),
+              'gray'  : (192,192,192),
+              'red'   : (255,0,0),
+              'yellow': (255,255,0),
+              'green' : (0,128,0),
+              'blue'  : (0,0,255),
+              'orange': (255,165,0)
+              }
+    for opt in options:
+      if '_COLOR' in opt:
+        key = options[opt]
+        if key in cmap:
+          options[opt] = cmap[options[opt]]
+        else:
+          options[opt] = cmap['black']
 
     # convert to attributes
     self._opts = Options(options)
