@@ -9,7 +9,7 @@
 
   "WIDTH"        : 400,
   "HEIGHT"       : 300,
-  "BORDER_COLOR" : 0,
+  "BORDER_COLOR" : "white",
 
   "HEIGHT_E"     : 42,
   "HEIGHT_S"     : 19,
@@ -17,41 +17,41 @@
 
   "TITLE"        : "",
   "TITLE_FONT"   : "/usr/share/fonts/truetype/dejavu/DejaVuSans-BoldOblique.ttf",
-  "TITLE_COLOR"  :  1,
+  "TITLE_COLOR"  : "black",
   "TITLE_SIZE"   : 35,
 
   "DAY_FONT"     : "/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf",
-  "DAY_COLOR"    :  0,
+  "DAY_COLOR"    : "white",
   "DAY_SIZE"     : 60,
-  "DAY_COLOR_BG" :  2,
+  "DAY_COLOR_BG" : "gray",
 
   "TIME_FONT"    : "/usr/share/fonts/truetype/dejavu/DejaVuSerif-BoldItalic.ttf",
-  "TIME_COLOR"   :  1,
+  "TIME_COLOR"   : "black",
   "TIME_SIZE"    : 18,
-  "TIME_COLOR_I" :  1,
-  "TIME_COLOR_BG":  2,
+  "TIME_COLOR_I" : "black",
+  "TIME_COLOR_BG": "gray",
 
   "TEXT_FONT"    : "/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf",
-  "TEXT_COLOR"   :  1,
+  "TEXT_COLOR"   : "black",
   "TEXT_SIZE"    : 18,
-  "TEXT_COLOR_I" :  1,
-  "TEXT_COLOR_BG":  2,
+  "TEXT_COLOR_I" : "black",
+  "TEXT_COLOR_BG": "gray",
 
-  "LINE_COLOR"   : 2,
+  "LINE_COLOR"   : "gray",
 
   "cals" : [ {
             "dav_url"      : "https://example.com/caldav.php",
             "dav_user"     : "somebody",
             "dav_pw"       : "somebodies_password",
             "cal_name"     : "mycal_1",
-            "cal_color"    : 0
+            "cal_color"    : "white"
            },
             {
             "dav_url"      : "https://example.com/caldav2.php",
             "dav_user"     : "somebody2",
             "dav_pw"       : "somebody2_password",
             "cal_name"     : "mycal_2",
-            "cal_color"    : 2
+            "cal_color"    : "gray"
            }
          ]
 }
