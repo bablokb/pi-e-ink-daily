@@ -50,13 +50,15 @@ class DailyAgenda(object):
   # --- constructor   --------------------------------------------------------
 
   def __init__(self):
+    if inky_available:
+      self._display = auto()
+
     self._read_settings()         # creates self._opts
     self.rc = 0                   # return-code
     self._create_fonts()
 
     # application objects
     if inky_available:
-      self._display = auto()
       self._opts.WIDTH=self._display.width
       self._opts.HEIGHT=self._display.height
 
