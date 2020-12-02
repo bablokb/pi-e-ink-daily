@@ -5,8 +5,6 @@
   "no_server_connection" : "no-server-connection.png",
   "no_events" : "empty-agenda.png",
 
-  "colors"       : "white: 0, black: 1, red/yellow/gray: 2",
-
   "WIDTH"        : 400,
   "HEIGHT"       : 300,
   "BORDER_COLOR" : "white",
