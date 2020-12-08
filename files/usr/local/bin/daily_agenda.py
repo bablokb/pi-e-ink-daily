@@ -85,7 +85,8 @@ class DailyAgenda(object):
     # map all color-attributes
     if inky_available:
       if self._display.colour == "multi":
-        cmap = {'white' : self._display.WHITE,
+        self._cmap = {
+                'white' : self._display.WHITE,
                 'black' : self._display.BLACK,
                 'gray'  : self._display.RED,        # for Inky-wHat black&white compat
                 'red'   : self._display.RED,
@@ -95,7 +96,8 @@ class DailyAgenda(object):
                 'orange': self._display.ORANGE
                 }
       else:
-        cmap = {'white' : self._display.WHITE,
+        self._cmap = {
+                'white' : self._display.WHITE,
                 'black' : self._display.BLACK,
                 'gray'  : self._display.RED,        # for Inky-wHat compat
                 'red'   : self._display.RED,
@@ -105,7 +107,8 @@ class DailyAgenda(object):
                 'orange': self._display.RED
                 }
     else:
-      cmap = {'white' : (255,255,255),
+      self._cmap = {
+              'white' : (255,255,255),
               'black' : (0,0,0),
               'gray'  : (192,192,192),
               'red'   : (255,0,0),
@@ -117,10 +120,10 @@ class DailyAgenda(object):
     for opt in options:
       if '_COLOR' in opt:
         key = options[opt]
-        if key in cmap:
-          options[opt] = cmap[options[opt]]
+        if key in self._cmap:
+          options[opt] = self._cmap[options[opt]]
         else:
-          options[opt] = cmap['black']
+          options[opt] = self._cmap['black']
 
     # convert to attributes
     self._opts = Options(options)
@@ -355,7 +358,8 @@ class DailyAgenda(object):
     for item in agenda_list:
       entries.append(("%s-%s" % (item['dtstart'].astimezone().strftime("%H:%M"),
                                  item['dtend'].astimezone().strftime("%H:%M")),
-                      (item['summary'],item['location']),cal_info["cal_color"]))
+                      (item['summary'],item['location']),
+                      self._cmap[cal_info["cal_color"]]))
 
   # --- extract time attribute   ----------------------------------------------
 
