@@ -203,7 +203,10 @@ class DailyAgenda(object):
     day_box     = [day_topleft[0]-self._opts.MARGINS[0],0,
                    self._opts.WIDTH+1,day_box_y]
 
-    self._canvas.rectangle(day_box,fill=self._opts.DAY_COLOR_BG)
+    if datetime.date.today().weekday() == 6:
+      self._canvas.rectangle(day_box,fill=self._opts.DAY_COLOR_BG7)
+    else:
+      self._canvas.rectangle(day_box,fill=self._opts.DAY_COLOR_BG)
     self._canvas.text(day_topleft,day,font=self._day_font,
                       fill=self._opts.DAY_COLOR)
     self._draw_hline(day_box_y)
