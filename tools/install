@@ -56,12 +56,6 @@ install_packages() {
 install_files() {
   echo -e "[INFO] installing project files" 2>&1
 
-  rand="$RANDOM"
-  if [ -f "/etc/${PROJECT}.json" ]; then
-    # save current configuration
-    mv "/etc/${PROJECT}.json" "/etc/${PROJECT}.json.$rand"
-  fi
-
   for f in `find $(dirname "$0")/../files/ -type f -not -name "*.pyc"`; do
     target="${f#*files}"
     target_dir="${target%/*}"
@@ -71,11 +65,10 @@ install_files() {
   done
   chmod 755 /usr/local/bin/daily_agenda.py
 
-  # restore old configuration
-  if [ -f "/etc/${PROJECT}.json.$rand" ]; then
-    mv -f "/etc/${PROJECT}.json" "/etc/${PROJECT}.json.new"
-    mv "/etc/${PROJECT}.json.$rand" "/etc/${PROJECT}.json"
-    echo -e "[INFO] new version of configuration file saved to: /etc/${PROJECT}.json.new" 2>&1
+  # create configuration file
+  if [ ! -f "/etc/${PROJECT}.json" ]; then
+    cp -a "/etc/${PROJECT}.defaults.json" "/etc/${PROJECT}.json"
+    echo -e "[INFO] created configuration file: /etc/${PROJECT}.json" 2>&1
   fi
 }
 
