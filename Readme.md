@@ -77,8 +77,9 @@ e.g. the inky-library, have to be updated manually:
 
     sudo pip3 install --upgrade inky
 
-Note that you might have to also change you existing configuration file
-(which is not touched) after an update.
+Note that you might also have to update your existing configuration file.
+The default configuration-file `/etc/pi-e-ink-daily.defaults.json` is
+always overwritten and should not be edited.
 
 The install-command will
 
@@ -109,7 +110,7 @@ CALDAV-settings:
     "cal_color"    : "white"
 
 Note you can query multiple calendars. Using a different color
-than white for the background of the agenda-entry (`cal_color`)
+than white or gray for the background of the agenda-entry (`cal_color`)
 is not recommended for a wHat.
 
 A note on the TITLE-setting:
