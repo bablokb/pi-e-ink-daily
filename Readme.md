@@ -118,6 +118,7 @@ A note on the TITLE-setting:
     "TITLE" : "",
 
 If this variable is the empty string, the title will show the current month.
+If it starts with a `%`, it will be interpreted as a strftime-spec.
 
 There are two settings which are only necessary for desktop-simulation:
 
