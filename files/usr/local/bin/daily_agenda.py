@@ -13,7 +13,8 @@
 #
 # ----------------------------------------------------------------------------
 
-CONFIG_FILE = "/etc/pi-e-ink-daily.json"
+CONFIG_FILE_DEFAULT = "/etc/pi-e-ink-daily.defaults.json"
+CONFIG_FILE         = "/etc/pi-e-ink-daily.json"
 
 import traceback
 
@@ -84,9 +85,12 @@ class DailyAgenda(object):
   def _read_settings(self):
     """ read settings from /etc/pi-e-ink-daily.json """
 
+    if os.path.exists(CONFIG_FILE_DEFAULT):
+      with open(CONFIG_FILE_DEFAULT,"r") as f:
+        options = json.load(f)
     if os.path.exists(CONFIG_FILE):
       with open(CONFIG_FILE,"r") as f:
-        options = json.load(f)
+        options.update(json.load(f))
 
     # map all color-attributes
     if inky_available:
