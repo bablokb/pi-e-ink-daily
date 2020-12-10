@@ -183,7 +183,10 @@ class DailyAgenda(object):
     """ Draw title """
 
     if self._opts.TITLE:
-      title = self._opts.TITLE
+      if self._opts.TITLE[0] == "%":
+        title = datetime.datetime.now().strftime(self._opts.TITLE)
+      else:
+        title = self._opts.TITLE
     else:
       title = datetime.datetime.now().strftime("%B")  # month
 
