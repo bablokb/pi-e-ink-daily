@@ -50,8 +50,14 @@ class DailyAgenda(object):
   # --- constructor   --------------------------------------------------------
 
   def __init__(self):
+    global inky_available
     if inky_available:
-      self._display = auto()
+      try:
+        self._display = auto()
+      except Exception:
+        # traceback.print_exc()
+        inky_available = False
+
 
     self._read_settings()         # creates self._opts
     self.rc = 0                   # return-code
