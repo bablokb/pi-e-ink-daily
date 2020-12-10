@@ -216,13 +216,15 @@ class DailyAgenda(object):
     tm      = e_time.split('-')
     tm_size = [0,0]
     tm_size[0] = self._canvas.textsize(tm[0],self._time_font,spacing=0)
-    self._canvas.text((self._opts.MARGINS[2],self._y_off+2),
-                      tm[0],font=self._time_font,
-                      fill=self._opts.TIME_COLOR)
     tm_size[1] = self._canvas.textsize(tm[1],self._time_font,spacing=0)
-    self._canvas.text((self._opts.MARGINS[2],self._y_off+4+tm_size[0][1]),
-                      tm[1],font=self._time_font,
-                      fill=self._opts.TIME_COLOR)
+    if e_time != "00:00-23:59":
+      # only print time for none full-day events
+      self._canvas.text((self._opts.MARGINS[2],self._y_off+2),
+                        tm[0],font=self._time_font,
+                        fill=self._opts.TIME_COLOR)
+      self._canvas.text((self._opts.MARGINS[2],self._y_off+4+tm_size[0][1]),
+                        tm[1],font=self._time_font,
+                        fill=self._opts.TIME_COLOR)
 
     # text (2 lines)
     txt_x_off = self._opts.MARGINS[2] + max(tm_size[0][0],tm_size[1][0]) + 4
