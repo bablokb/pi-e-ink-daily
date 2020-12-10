@@ -32,6 +32,10 @@ button (or an external device) turns on the Pi by pulling the enable pin high.
 The Pi itself turns of the current after shutdown by pulling the enable
 pin low again.
 
+Adafruit has other nice solutions for this, e.g. an enable timer button
+(works the same way, but powers on every two hours or shorter), or a
+pushbutton power-switch.
+
 
 Hardware
 --------
@@ -51,7 +55,8 @@ Optional components:
 A normal update-cycle with some boot-time optimizations takes about one
 minute. System-boot is more than half of this time, another 15 seconds are lost
 during initialization of the python3-interpreter, the update of the
-black&white variant of the wHat takes 8 seconds.
+black&white variant of the wHat takes 8 seconds (the Inky-Impression takes
+three times longer).
 
 Average power-requirement is 115mA (measured for the wHat), so the
 update-cycle draws 2mAh from the battery. A normal 1200mAh LiPo should
@@ -112,6 +117,13 @@ A note on the TITLE-setting:
     "TITLE" : "",
 
 If this variable is the empty string, the title will show the current month.
+
+There are two settings which are only necessary for desktop-simulation:
+
+  "WIDTH"        : 400,
+  "HEIGHT"       : 300,
+
+If the program detects a real inky, it will use the physical dimensions.
 
 During tests you might want to disable the service or remove at least
 the instant shutdown from the systemd-service file
