@@ -60,6 +60,7 @@ class DailyAgenda(object):
         inky_available = False
 
 
+    self._create_color_maps()     # create color-maps
     self._read_settings()         # creates self._opts
     self.rc = 0                   # return-code
     self._create_fonts()
@@ -80,19 +81,11 @@ class DailyAgenda(object):
     self._canvas = ImageDraw.Draw(self._image)
     self._y_off  = 0
 
-  # --- read settings from config-file   -------------------------------------
+  # --- create color-maps   --------------------------------------------------
 
-  def _read_settings(self):
-    """ read settings from /etc/pi-e-ink-daily.json """
+  def _create_color_maps(self):
+    """ create color-maps """
 
-    if os.path.exists(CONFIG_FILE_DEFAULT):
-      with open(CONFIG_FILE_DEFAULT,"r") as f:
-        options = json.load(f)
-    if os.path.exists(CONFIG_FILE):
-      with open(CONFIG_FILE,"r") as f:
-        options.update(json.load(f))
-
-    # map all color-attributes
     if inky_available:
       if self._display.colour == "multi":
         self._cmap = {
@@ -127,6 +120,19 @@ class DailyAgenda(object):
               'blue'  : (0,0,255),
               'orange': (255,165,0)
               }
+
+  # --- read settings from config-file   -------------------------------------
+
+  def _read_settings(self):
+    """ read settings from /etc/pi-e-ink-daily.json """
+
+    if os.path.exists(CONFIG_FILE_DEFAULT):
+      with open(CONFIG_FILE_DEFAULT,"r") as f:
+        options = json.load(f)
+    if os.path.exists(CONFIG_FILE):
+      with open(CONFIG_FILE,"r") as f:
+        options.update(json.load(f))
+
     for opt in options:
       if '_COLOR' in opt:
         key = options[opt]
