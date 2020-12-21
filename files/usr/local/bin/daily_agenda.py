@@ -246,10 +246,10 @@ class DailyAgenda(object):
       # only print time for none full-day events
       self._canvas.text((self._opts.MARGINS[2],self._y_off+2),
                         tm[0],font=self._time_font,
-                        fill=self._opts.TIME_COLOR)
+                        fill=self._bg_map[e_color])
       self._canvas.text((self._opts.MARGINS[2],self._y_off+4+tm_size[0][1]),
                         tm[1],font=self._time_font,
-                        fill=self._opts.TIME_COLOR)
+                        fill=self._bg_map[e_color])
 
     # text (2 lines)
     txt_x_off = self._opts.MARGINS[2] + max(tm_size[0][0],tm_size[1][0]) + 4
@@ -258,12 +258,12 @@ class DailyAgenda(object):
                                       self._text_font,spacing=0)
     self._canvas.text((txt_x_off,txt_y_off),e_text[0],
                       font=self._text_font,
-                      fill=self._opts.TEXT_COLOR)
+                      fill=self._bg_map[e_color])
 
     txt_y_off += text_size[1]
     self._canvas.text((txt_x_off,txt_y_off),
                       e_text[1],font=self._text_font,
-                      fill=self._opts.TEXT_COLOR)
+                      fill=self._bg_map[e_color])
 
     # ending line
     self._y_off += self._opts.HEIGHT_E
