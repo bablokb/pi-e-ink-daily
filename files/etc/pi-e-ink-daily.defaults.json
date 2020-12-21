@@ -40,7 +40,7 @@
   "STATUS_COLOR" : "black",
   "STATUS_SIZE"  : 18,
 
-  "LINE_COLOR"   : "gray",
+  "LINE_COLOR"   : "black",
 
   "cals" : [ {
             "dav_url"      : "https://example.com/caldav.php",
