@@ -80,8 +80,8 @@ class ColorTester(object):
 
     # font and text
     self._font   = ImageFont.truetype(
-      "/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf",50)
-    self._text = "pi"
+      "/usr/share/fonts/truetype/dejavu/DejaVuSans-Oblique.ttf",50)
+    self._text = "\u03C0"
     self._text_size = self._canvas.textsize(self._text,self._font,spacing=0)
 
     # colors
