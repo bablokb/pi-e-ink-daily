@@ -27,14 +27,10 @@
   "TIME_FONT"    : "/usr/share/fonts/truetype/dejavu/DejaVuSerif-BoldItalic.ttf",
   "TIME_COLOR"   : "black",
   "TIME_SIZE"    : 18,
-  "TIME_COLOR_I" : "black",
-  "TIME_COLOR_BG": "gray",
 
   "TEXT_FONT"    : "/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf",
   "TEXT_COLOR"   : "black",
   "TEXT_SIZE"    : 18,
-  "TEXT_COLOR_I" : "black",
-  "TEXT_COLOR_BG": "gray",
 
   "STATUS_FONT"  : "/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf",
   "STATUS_COLOR" : "black",
