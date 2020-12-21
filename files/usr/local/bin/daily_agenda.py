@@ -55,10 +55,25 @@ class DailyAgenda(object):
     if inky_available:
       try:
         self._display = auto()
+        if self._display.colour != "multi":
+          self._display.GRAY   = self._display.RED
+          self._display.GREEN  = self._display.RED
+          self._display.BLUE   = self._display.RED
+          self._display.ORANGE = self._display.RED
       except Exception:
-        # traceback.print_exc()
-        inky_available = False
+        inky_available = False    # only the lib is available
 
+    if not inky_available:
+      self._display = Options( {
+        'WHITE' : (255,255,255),
+        'BLACK' : (0,0,0),
+        'GRAY'  : (192,192,192),
+        'RED'   : (255,0,0),
+        'YELLOW': (255,255,0),
+        'GREEN' : (0,128,0),
+        'BLUE'  : (0,0,255),
+        'ORANGE': (255,165,0)
+        })
 
     self._create_color_maps()     # create color-maps
     self._read_settings()         # creates self._opts
@@ -86,40 +101,16 @@ class DailyAgenda(object):
   def _create_color_maps(self):
     """ create color-maps """
 
-    if inky_available:
-      if self._display.colour == "multi":
-        self._cmap = {
-                'white' : self._display.WHITE,
-                'black' : self._display.BLACK,
-                'gray'  : self._display.RED,        # for Inky-wHat black&white compat
-                'red'   : self._display.RED,
-                'yellow': self._display.YELLOW,
-                'green' : self._display.GREEN,
-                'blue'  : self._display.BLUE,
-                'orange': self._display.ORANGE
-                }
-      else:
-        self._cmap = {
-                'white' : self._display.WHITE,
-                'black' : self._display.BLACK,
-                'gray'  : self._display.RED,        # for Inky-wHat compat
-                'red'   : self._display.RED,
-                'yellow': self._display.RED,
-                'green' : self._display.RED,
-                'blue'  : self._display.RED,
-                'orange': self._display.RED
-                }
-    else:
-      self._cmap = {
-              'white' : (255,255,255),
-              'black' : (0,0,0),
-              'gray'  : (192,192,192),
-              'red'   : (255,0,0),
-              'yellow': (255,255,0),
-              'green' : (0,128,0),
-              'blue'  : (0,0,255),
-              'orange': (255,165,0)
-              }
+    self._cmap = {
+      'white' : self._display.WHITE,
+      'black' : self._display.BLACK,
+      'gray'  : self._display.RED,
+      'red'   : self._display.RED,
+      'yellow': self._display.YELLOW,
+      'green' : self._display.GREEN,
+      'blue'  : self._display.BLUE,
+      'orange': self._display.ORANGE
+      }
 
   # --- read settings from config-file   -------------------------------------
 
