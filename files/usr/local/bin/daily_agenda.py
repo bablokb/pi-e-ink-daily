@@ -112,6 +112,18 @@ class DailyAgenda(object):
       'orange': self._display.ORANGE
       }
 
+    # map bg-color to suitable fg-color
+    self._bg_map = {
+      self._display.WHITE:  self._display.BLACK,
+      self._display.BLACK:  self._display.WHITE,
+      self._display.GRAY:   self._display.BLACK,
+      self._display.RED:    self._display.BLACK,
+      self._display.YELLOW: self._display.BLACK,
+      self._display.GREEN:  self._display.BLACK,
+      self._display.BLUE:   self._display.WHITE,
+      self._display.ORANGE: self._display.BLACK,
+      }
+
   # --- read settings from config-file   -------------------------------------
 
   def _read_settings(self):
