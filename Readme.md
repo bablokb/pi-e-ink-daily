@@ -42,8 +42,12 @@ Hardware
 
 The minimal list of required hardware is short:
 
-  - a Raspberry Pi Zero
+  - a Raspberry Pi Zero-W
   - an Inky-wHAT or Inky-Impression from Pimoroni
+
+Since the e-ink displays only expose GPIO4 (besides I2C and SPI), I
+soldered long pins to the Pi Zero-W to have pins on both sides, so
+every pin not used by the display is available from the back.
 
 Optional components:
 
