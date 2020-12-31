@@ -9,6 +9,9 @@
 #
 # --------------------------------------------------------------------------
 
+# Pin to signal power-off. Default is 26 if no argument given
+
+GPIO_POWEROFF="${1:-26}"
 PACKAGES="python3-pil python3-numpy python3-rpi.gpio python3-spidev python3-pip python3-tz python3-tzlocal libxslt1.1 fonts-dejavu"
 PACKAGES_PIP="smbus2 inky caldav"
 PROJECT="pi-e-ink-daily"
@@ -79,17 +82,26 @@ configure_system() {
   if ! grep -q "^dtparam=spi=on" /boot/config.txt ; then
     echo -e "[INFO] configuring spi in /boot/config.txt" 2>&1
     echo "dtparam=spi=on" >> /boot/config.txt
-    echo -e "[INFO] please reboot your system" 2>&1
   fi
   if ! grep -q "^dtparam=i2c_arm=on" /boot/config.txt ; then
     echo -e "[INFO] configuring i2c in /boot/config.txt" 2>&1
     echo "dtparam=i2c_arm=on" >> /boot/config.txt
-    echo -e "[INFO] please reboot your system" 2>&1
+  fi
+  if ! grep -q "^gpio=24" /boot/config.txt ; then
+    echo -e "[INFO] configuring GPIO24 as input with pullup in /boot/config.txt" 2>&1
+    echo "gpio=24=ip,pu" >> /boot/config.txt
   fi
   if ! grep -q "^dtoverlay=gpio-poweroff" /boot/config.txt ; then
-    echo -e "[INFO] configuring gpio-poweroff for GPIO4 in /boot/config.txt" 2>&1
-    echo "dtoverlay=gpio-poweroff,gpiopin=4" >> /boot/config.txt
-    echo -e "[INFO] please reboot your system" 2>&1
+    echo -e "[INFO] configuring gpio-poweroff for GPIO$GPIO_POWEROFF in /boot/config.txt" 2>&1
+    echo "dtoverlay=gpio-poweroff,gpiopin=$GPIO_POWEROFF" >> /boot/config.txt
+  fi
+  if ! grep -q "^dtoverlay=gpio-shutdown" /boot/config.txt ; then
+    echo -e "[INFO] configuring gpio-shutdown for GPIO6 in /boot/config.txt" 2>&1
+    echo "dtoverlay=gpio-shutdown,gpio_pin=6" >> /boot/config.txt
+  fi
+  if ! grep -q "^dtoverlay=i2c-rtc,ds3231" /boot/config.txt ; then
+    echo -e "[INFO] configuring RTC in /boot/config.txt" 2>&1
+    echo "dtoverlay=i2c-rtc,ds3231,wakeup-source" >> /boot/config.txt
   fi
 
   # update /etc/modules
@@ -114,4 +126,5 @@ install_files
 configure_system
 enable_services
 
-echo "[INFO] installation completed"
+echo -e "[INFO] installation completed" 2>&1
+echo -e "[INFO] please reboot your system" 2>&1
