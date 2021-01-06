@@ -294,11 +294,44 @@ class DailyAgenda(object):
     status_y = self._opts.HEIGHT - self._opts.HEIGHT_S
     self._draw_hline(status_y)
 
+    # update-info
     status_text = "Updated: %s" % datetime.datetime.now().strftime("%x %X")
-    self._canvas.text((self._opts.MARGINS[2],status_y+2),
+    self._canvas.text((self._opts.MARGINS[2],status_y),
                       status_text,
                       font=self._status_font,
                       fill=self._opts.STATUS_COLOR)
+
+    # battery-info
+    if inky_available:
+      import RPi.GPIO as GPIO
+      GPIO.setmode(GPIO.BCM)
+      if self._opts.BAT_OK_VALUE:
+        pull = GPIO.PUD_UP
+      else:
+        pull = GPIO.PUD_DOWN
+      GPIO.setup(self._opts.BAT_GPIO,GPIO.IN,pull_up_down=pull)
+
+      if GPIO.input(self._opts.BAT_GPIO) == self._opts.BAT_OK_VALUE:
+        bat_text  = self._opts.BAT_OK_TEXT
+        bat_color = self._opts.BAT_OK_COLOR
+      else:
+        bat_text  = self._opts.BAT_LOW_TEXT
+        bat_color = self._opts.BAT_LOW_COLOR
+    else:
+      # just simulate
+      if self._opts.BAT_OK_VALUE:
+        bat_text  = self._opts.BAT_OK_TEXT
+        bat_color = self._opts.BAT_OK_COLOR
+      else:
+        bat_text  = self._opts.BAT_LOW_TEXT
+        bat_color = self._opts.BAT_LOW_COLOR
+
+    bat_size  = self._canvas.textsize(bat_text,self._status_font,spacing=0)
+    self._canvas.text((self._opts.WIDTH-self._opts.MARGINS[3]-bat_size[0],
+                       status_y),
+                      bat_text,
+                      font=self._status_font,
+                      fill=bat_color)
 
   # --- show image   ---------------------------------------------------------
 

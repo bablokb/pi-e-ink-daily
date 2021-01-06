@@ -36,6 +36,13 @@
   "STATUS_COLOR" : "black",
   "STATUS_SIZE"  : 18,
 
+  "BAT_GPIO"     : 16,
+  "BAT_OK_VALUE" : 0,
+  "BAT_OK_TEXT"  : "\u25AE\u25AE\u25AE",
+  "BAT_OK_COLOR" : "green",
+  "BAT_LOW_TEXT" : "\u25AF\u25AF\u25AF",
+  "BAT_LOW_COLOR": "red",
+
   "LINE_COLOR"   : "black",
 
   "cals" : [ {
