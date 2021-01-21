@@ -2,7 +2,9 @@ Frame for the Inky-Impression
 =============================
 
 In this directory you will find three STL-files for a frame. The frame
-is open at the back and should be attached to a wall.
+is open at the back and should be attached to a wall. If you like
+to modifiy the design, you should head over to my
+[Tinkercad-project](https://www.tinkercad.com/things/1BvKeof9mrh).
 
 ![](parts.jpg)
 
