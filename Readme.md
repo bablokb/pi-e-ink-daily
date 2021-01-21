@@ -67,9 +67,9 @@ update-cycle draws 2mAh from the battery. A normal 1200mAh LiPo should
 therefore last at least a year with a daily update.
 
 If you use an Inky-Impression, have a look into the sub-directory
-[](Inky-Impression-Frame/Readme.md). The directory contains the STL-files
-for a complete slim frame for the Impression together with some
-images of my actual setup.
+[Inky-Impression-Frame](Inky-Impression-Frame/Readme.md).
+The directory contains the STL-files for a complete slim frame
+for the Impression together with some images of my actual setup.
 
 
 Installation
