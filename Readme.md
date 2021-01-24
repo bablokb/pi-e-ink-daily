@@ -15,9 +15,10 @@ The calendars must be accessible via CALDAV, but this is usually the case.
 ![](calendar.jpg)
 
 Since an e-ink display keeps its content even after power is turned off,
-the Pi boots, updates the display and shuts down again. This repository
-has all the necessary software for this process, including the definition
-of a systemd-service.
+the Pi boots, updates the display and shuts down again (see the section
+[Configuration](#Configuration "Configuration"). This repository has all
+the necessary software for this process, including the definition of a
+systemd-service.
 
 E-inks are ideal for battery-based projects, otherwise there is no
 justification for the extra cost and missing functionality of these displays.
@@ -86,7 +87,7 @@ e.g. the inky-library, have to be updated manually:
 
     sudo pip3 install --upgrade inky
 
-Note that you might also have to update your existing configuration file.
+*Note that you might also have to update your existing configuration file*.
 The default configuration-file `/etc/pi-e-ink-daily.defaults.json` is
 always overwritten and should not be edited.
 
@@ -131,28 +132,20 @@ If it starts with a `%`, it will be interpreted as a strftime-spec.
 
 There are two settings which are only necessary for desktop-simulation:
 
-  "WIDTH"        : 400,
-  "HEIGHT"       : 300,
+    "WIDTH"        : 400,
+    "HEIGHT"       : 300,
 
 If the program detects a real inky, it will use the physical dimensions.
 
-During tests you might want to disable the service or remove at least
-the instant shutdown from the systemd-service file
-`/etc/systemd/system/pi-e-ink-daily.service`:
+To configure the __shutdown-behavior__, set the following variables:
 
-    [Unit]
-    Description=Update Daily-Agenda on E-Ink Display
-    Requires=network-online.target
-    After=network-online.target
-    Wants=network-online.target
+    "auto_shutdown"        : 0,
+    "no_shutdown_on_error" : 0,
 
-    [Service]
-    Type=oneshot
-    RemainAfterExit=true
-    ExecStart=/usr/local/bin/daily_agenda.py
-    ExecStart=/bin/systemctl poweroff
+After initial testing, you would set the first variable to `1` to enable
+automatic shutdown.
 
-    [Install]
-    WantedBy=multi-user.target
-
-Just add a hash (comment) before the second `ExecStart`.
+If the second variable is set, the system will stay up even if there are
+errors during the update of the calendar, e.g. because the network is not
+available or because the caldav-server has problems. Since this will
+drain your battery, this setting is only recommended for debugging.
