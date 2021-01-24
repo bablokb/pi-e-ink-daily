@@ -1,9 +1,10 @@
 {
   "comment"      : "see source code if in doubt about settings",
 
+  "auto_shutdown"        : 0,
   "no_shutdown_on_error" : 0,
   "no_server_connection" : "no-server-connection.png",
-  "no_events" : "empty-agenda.png",
+  "no_events"            : "empty-agenda.png",
 
   "WIDTH"        : 400,
   "HEIGHT"       : 300,
