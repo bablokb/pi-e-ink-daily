@@ -467,5 +467,7 @@ if __name__ == '__main__':
   screen.show()
   if screen._opts.no_shutdown_on_error and screen.rc > 0:
     sys.exit(screen.rc)
-  else:
+  elif screen._opts.auto_shutdown:
     sys.exit(0)
+  else:
+    sys.exit(1)
