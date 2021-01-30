@@ -60,6 +60,8 @@ class DailyAgenda(object):
           self._display.GREEN  = self._display.RED
           self._display.BLUE   = self._display.RED
           self._display.ORANGE = self._display.RED
+        else:
+          self._display.GRAY   = self._display.RED
       except Exception:
         inky_available = False    # only the lib is available
 
