@@ -21,6 +21,7 @@ Wants=network-online.target
 [Service]
 Type=oneshot
 RemainAfterExit=true
+ExecStart=/usr/local/bin/check_admin_mode.sh
 ExecStart=/usr/local/bin/daily_agenda.py
 ExecStart=/bin/systemctl poweroff
 
