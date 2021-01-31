@@ -137,6 +137,10 @@ There are two settings which are only necessary for desktop-simulation:
 
 If the program detects a real inky, it will use the physical dimensions.
 
+
+Shutdown
+--------
+
 To configure the __shutdown-behavior__, set the following variables:
 
     "auto_shutdown"        : 0,
@@ -149,3 +153,16 @@ If the second variable is set, the system will stay up even if there are
 errors during the update of the calendar, e.g. because the network is not
 available or because the caldav-server has problems. Since this will
 drain your battery, this setting is only recommended for debugging.
+
+
+Administration-Mode
+-------------------
+
+There is a special boot-mode called *admin-mode*: in this mode the Pi
+boots normally but does not update the display and does not shutdown,
+even if auto-shutdown is active.
+
+Admin-mode is necessary to update the software of the Pi. To enter
+this mode, pull GPIO24 low during boot. On an Inky-Impression, this
+GPIO is tied to key "D" (last key), so just press this key until the
+system is up.
