@@ -166,3 +166,20 @@ Admin-mode is necessary to update the software of the Pi. To enter
 this mode, pull GPIO24 low during boot. On an Inky-Impression, this
 GPIO is tied to key "D" (last key), so just press this key until the
 system is up.
+
+
+Inky-Impression Keys
+--------------------
+
+In my setup, I am using the pHat from <https://github.com/bablokb/pcb-pi-batman>
+as the battery-interface (see [](Inky-Impression-Frame/pi-with-hat.jpg)).
+This allows using some of the Impression keys:
+
+|GPIO   | Key  | pHat        | TODO/usage
+|-------|------|-------------|-------------------
+|GPIO5  |  A   | -           | power-on (if wired to SW1-Pin2(*))
+|GPIO6  |  B   | SW2 (off)   | shutdown (via dtoverlay=gpio-shutdown,gpio_pin=6)
+|GPIO16 |  C   | low-battery | don't use (conflict with low-battery indicator)
+|GPIO24 |  D   | -           | boot in admin-mode
+
+(*) bottom left
