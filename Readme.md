@@ -172,7 +172,7 @@ Inky-Impression Keys
 --------------------
 
 In my setup, I am using the pHat from <https://github.com/bablokb/pcb-pi-batman>
-as the battery-interface (see [](Inky-Impression-Frame/pi-with-hat.jpg)).
+as the battery-interface (image [here](Inky-Impression-Frame/pi-with-hat.jpg)).
 This allows using some of the Impression keys:
 
 |GPIO   | Key  | pHat        | usage
