@@ -22,7 +22,6 @@ import traceback
 
 import argparse
 import sys, os, datetime, locale, json
-from operator import itemgetter
 
 from PIL import Image, ImageDraw, ImageFont
 import caldav
@@ -173,13 +172,6 @@ class DailyAgenda(object):
     self._status_font = ImageFont.truetype(self._opts.STATUS_FONT,
                                           self._opts.STATUS_SIZE)
 
-  # --- return maximal number of possible entries   ------------------------
-
-  def get_max_entries(self):
-    """ return entries - must be called after dray_day """
-
-    return int((self._opts.HEIGHT-self._opts.HEIGHT_S-self._y_off)/self._opts.HEIGHT_E)
-
   # --- draw a line   ------------------------------------------------------
 
   def _draw_hline(self,y):
@@ -227,49 +219,6 @@ class DailyAgenda(object):
 
     # update global y offset
     self._y_off = day_box_y + 2
-
-  # --- agenda entry   ------------------------------------------------------
-
-  def draw_entry(self,e_time,e_text,e_color):
-    """ draw a single agenda entry """
-
-    # background
-    background = [(0,self._y_off+1),
-                    (self._opts.WIDTH,
-                                    self._y_off+self._opts.HEIGHT_E-1)]
-    self._canvas.rectangle(background,fill=e_color)
-  
-    # time-value
-    tm      = e_time.split('-')
-    tm_size = [0,0]
-    tm_size[0] = self._canvas.textsize(tm[0],self._time_font,spacing=0)
-    tm_size[1] = self._canvas.textsize(tm[1],self._time_font,spacing=0)
-    if e_time != "00:00-23:59":
-      # only print time for none full-day events
-      self._canvas.text((self._opts.MARGINS[2],self._y_off+2),
-                        tm[0],font=self._time_font,
-                        fill=self._bg_map[e_color])
-      self._canvas.text((self._opts.MARGINS[2],self._y_off+4+tm_size[0][1]),
-                        tm[1],font=self._time_font,
-                        fill=self._bg_map[e_color])
-
-    # text (2 lines)
-    txt_x_off = self._opts.MARGINS[2] + max(tm_size[0][0],tm_size[1][0]) + 4
-    txt_y_off = self._y_off + 2
-    text_size = self._canvas.textsize(e_text[0],
-                                      self._text_font,spacing=0)
-    self._canvas.text((txt_x_off,txt_y_off),e_text[0],
-                      font=self._text_font,
-                      fill=self._bg_map[e_color])
-
-    txt_y_off += text_size[1]
-    self._canvas.text((txt_x_off,txt_y_off),
-                      e_text[1],font=self._text_font,
-                      fill=self._bg_map[e_color])
-
-    # ending line
-    self._y_off += self._opts.HEIGHT_E
-    self._draw_hline(self._y_off)
 
   # --- overlay image   -----------------------------------------------------
 
@@ -353,91 +302,6 @@ class DailyAgenda(object):
     # fallback to direct display using PIL default viewer
     self._image.show()
 
-  # --- read agendas from caldav-servers   ------------------------------------
-
-  def get_agenda(self):
-    """ read agenda for all configured calendars """
-
-    entries = []
-    for cal_info in self._opts.cals:
-      self._get_agenda_for_cal(cal_info,entries)
-    entries.sort(key=itemgetter(0))
-    return entries
-
-  # --- read agenda from caldav-server   --------------------------------------
-
-  def _get_agenda_for_cal(self,cal_info,entries):
-    """ read agenda from caldav-server """
-
-    start_of_day = datetime.datetime.combine(datetime.date.today(),
-                                         datetime.time.min)
-    end_of_day   = datetime.datetime.combine(datetime.date.today(),
-                                         datetime.time.max)
-    now          = tzlocal.get_localzone().localize(datetime.datetime.now())
-
-    client = caldav.DAVClient(url=cal_info["dav_url"],
-                                username=cal_info["dav_user"],
-                                password=cal_info["dav_pw"])
-
-    # get calendar by name
-    calendars = client.principal().calendars()
-    cal = next(c for c in calendars if c.name == cal_info["cal_name"])
-
-    # extract relevant data
-    cal_events = cal.date_search(start=start_of_day,end=end_of_day,expand=True)
-    agenda_list = []
-    for cal_event in cal_events:
-      item = {}
-      if hasattr(cal_event.instance, 'vtimezone'):
-        tzinfo = cal_event.instance.vtimezone.gettzinfo()
-      else:
-        tzinfo = tzlocal.get_localzone()
-      components = cal_event.instance.components()
-      for component in components:
-        if component.name != 'VEVENT':
-          continue
-        item['dtstart'] = self._get_timeattr(
-          component,'dtstart',start_of_day,tzinfo)
-        if hasattr(component,'duration'):
-          duration = getattr(component,'duration').value
-          item['dtend'] = item['dtstart'] + duration
-        else:
-          item['dtend']   = self._get_timeattr(
-            component,'dtend',end_of_day,tzinfo)
-        if item['dtend'] < now:
-          # ignore old events
-          continue
-        if item['dtend'].day != item['dtstart'].day:
-          item['dtend'] = tzlocal.get_localzone().localize(end_of_day)
-
-        for attr in ('summary', 'location'):
-          if hasattr(component,attr):
-            item[attr] = getattr(component,attr).value
-          else:
-            item[attr] = ""
-        agenda_list.append(item)
-
-    for item in agenda_list:
-      entries.append(("%s-%s" % (item['dtstart'].astimezone().strftime("%H:%M"),
-                                 item['dtend'].astimezone().strftime("%H:%M")),
-                      (item['summary'],item['location']),
-                      self._cmap[cal_info["cal_color"]]))
-
-  # --- extract time attribute   ----------------------------------------------
-
-  def _get_timeattr(self,component,timeattr,default,tzinfo):
-    """ extract time attribute """
-
-    if hasattr(component,timeattr):
-      dt = getattr(component,timeattr).value
-      if not isinstance(dt,datetime.datetime):
-        dt = datetime.datetime(dt.year, dt.month, dt.day)
-    else:
-      dt = default
-    if not dt.tzinfo:
-      dt = tzinfo.localize(dt)
-    return dt
-
 # --- main program   ----------------------------------------------------------
 
 if __name__ == '__main__':
@@ -447,23 +311,9 @@ if __name__ == '__main__':
   screen.draw_title()
   screen.draw_day()
 
-  try:
-    entries = screen.get_agenda()
-  except:
-    traceback.print_exc()
-    screen.rc = 3
-
-  if screen.rc:
-    screen.draw_image(screen.NO_CONNECT)
-  elif len(entries):
-    count = 0
-    for entry in entries:
-      screen.draw_entry(*entry)
-      count += count
-      if count > screen.get_max_entries():
-        break
-  else:
-    screen.draw_image(screen.NO_EVENTS)
+  from CalContentProvider import CalContentProvider
+  content = CalContentProvider(screen)
+  content.draw_content()
 
   screen.draw_status()
   screen.show()
