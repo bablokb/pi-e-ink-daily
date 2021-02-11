@@ -6,6 +6,8 @@
   "no_server_connection" : "no-server-connection.png",
   "no_events"            : "empty-agenda.png",
 
+  "content_provider" : "CalContentProvider",
+
   "WIDTH"        : 400,
   "HEIGHT"       : 300,
   "BORDER_COLOR" : "white",
