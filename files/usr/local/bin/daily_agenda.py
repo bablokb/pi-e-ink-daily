@@ -24,8 +24,6 @@ import argparse
 import sys, os, datetime, locale, json
 
 from PIL import Image, ImageDraw, ImageFont
-import caldav
-import tzlocal
 
 try:
   from inky.auto import auto
@@ -302,6 +300,15 @@ class DailyAgenda(object):
     # fallback to direct display using PIL default viewer
     self._image.show()
 
+  # --- load content provider   ----------------------------------------------
+
+  def get_content_provider(self):
+    """ load content provider """
+
+    mod = __import__(self._opts.content_provider)
+    klass = getattr(mod,self._opts.content_provider)
+    return klass(self)
+
 # --- main program   ----------------------------------------------------------
 
 if __name__ == '__main__':
@@ -311,9 +318,8 @@ if __name__ == '__main__':
   screen.draw_title()
   screen.draw_day()
 
-  from CalContentProvider import CalContentProvider
-  content = CalContentProvider(screen)
-  content.draw_content()
+  provider = screen.get_content_provider()
+  provider.draw_content()
 
   screen.draw_status()
   screen.show()
