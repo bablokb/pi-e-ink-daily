@@ -64,8 +64,8 @@
            }
          ],
 
-  "OWM_LATITUDE"  : 48.135125,
-  "OWM_LONGITUDE" : 11.581981,
-  "OWM_APIKEY"    : "undef"
+  "owm_latitude"  : 48.135125,
+  "owm_longitude" : 11.581981,
+  "owm_apikey"    : "undef"
 
 }
