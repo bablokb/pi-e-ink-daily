@@ -62,5 +62,10 @@
             "cal_name"     : "mycal_2",
             "cal_color"    : "gray"
            }
-         ]
+         ],
+
+  "OWM_LATITUDE"  : 48.135125,
+  "OWM_LONGITUDE" : 11.581981,
+  "OWM_APIKEY"    : "undef"
+
 }
