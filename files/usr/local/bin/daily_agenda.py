@@ -76,6 +76,7 @@ class DailyAgenda(object):
 
     self._create_color_maps()     # create color-maps
     self._read_settings()         # creates self._opts
+    self._get_content_provider()
     self.rc = 0                   # return-code
     self._create_fonts()
 
@@ -93,7 +94,17 @@ class DailyAgenda(object):
                              color=self._opts.BORDER_COLOR)
 
     self._canvas = ImageDraw.Draw(self._image)
+    self.provider.set_canvas(self._canvas)
     self._y_off  = 0
+
+  # --- load content provider   ----------------------------------------------
+
+  def _get_content_provider(self):
+    """ load content provider """
+
+    mod = __import__(self._opts.content_provider)
+    klass = getattr(mod,self._opts.content_provider)
+    self.provider = klass(self)
 
   # --- create color-maps   --------------------------------------------------
 
@@ -300,15 +311,6 @@ class DailyAgenda(object):
     # fallback to direct display using PIL default viewer
     self._image.show()
 
-  # --- load content provider   ----------------------------------------------
-
-  def get_content_provider(self):
-    """ load content provider """
-
-    mod = __import__(self._opts.content_provider)
-    klass = getattr(mod,self._opts.content_provider)
-    return klass(self)
-
 # --- main program   ----------------------------------------------------------
 
 if __name__ == '__main__':
@@ -318,8 +320,7 @@ if __name__ == '__main__':
   screen.draw_title()
   screen.draw_day()
 
-  provider = screen.get_content_provider()
-  provider.draw_content()
+  screen.provider.draw_content()
 
   screen.draw_status()
   screen.show()
