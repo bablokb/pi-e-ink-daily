@@ -57,6 +57,7 @@ class OWMData(object):
     val.wind_speed = wdict["wind_speed"]
     val.wind_deg   = wdict["wind_deg"]
     val.wind_dir   = OWMData.DIRECTION[int((int(val.wind_deg)+22.5)/45)]
+    val.id         = wdict["weather"][0]["id"]
     val.icon       = wdict["weather"][0]["icon"]
     return val
 
