@@ -74,11 +74,28 @@ class DailyAgenda(object):
         'ORANGE': (255,165,0)
         })
 
-    self._create_color_maps()     # create color-maps
-    self._read_settings()         # creates self._opts
+    # read settings. This has to be done twice: the first
+    # time to query the content-provider, the second time
+    # to overwrite default settings of content-provider
+    self._opts = {}
+    self._read_settings()
     self._get_content_provider()
-    self.rc = 0                   # return-code
+    self.provider.read_settings()
+    self._read_settings()
+    self._opts = Options(self._opts)     # convert to attributes
+
+    # drawing objects
+    self._create_color_maps()            # create color-maps
+    self._map_colors()
     self._create_fonts()
+
+    # path to images
+    pgm_dir = os.path.dirname(os.path.realpath(__file__))
+    img_dir = os.path.realpath(os.path.join(pgm_dir,"..",
+                                            "share","pi-e-ink-daily"))
+    self.NO_CONNECT = os.path.join(img_dir,self._opts.no_server_connection)
+    self.NO_EVENTS  = os.path.join(img_dir,self._opts.no_events)
+
 
     # application objects
     if inky_available:
@@ -96,14 +113,15 @@ class DailyAgenda(object):
     self._canvas = ImageDraw.Draw(self._image)
     self.provider.set_canvas(self._canvas)
     self._y_off  = 0
+    self.rc = 0                   # return-code
 
   # --- load content provider   ----------------------------------------------
 
   def _get_content_provider(self):
     """ load content provider """
 
-    mod = __import__(self._opts.content_provider)
-    klass = getattr(mod,self._opts.content_provider)
+    mod = __import__(self._opts["content_provider"])
+    klass = getattr(mod,self._opts["content_provider"])
     self.provider = klass(self)
 
   # --- create color-maps   --------------------------------------------------
@@ -141,11 +159,17 @@ class DailyAgenda(object):
 
     if os.path.exists(CONFIG_FILE_DEFAULT):
       with open(CONFIG_FILE_DEFAULT,"r") as f:
-        options = json.load(f)
+        self._opts.update(json.load(f))
     if os.path.exists(CONFIG_FILE):
       with open(CONFIG_FILE,"r") as f:
-        options.update(json.load(f))
+        self._opts.update(json.load(f))
 
+  # --- create color-maps   --------------------------------------------------
+
+  def _map_colors(self):
+    """ map colors """
+
+    options = vars(self._opts)
     for opt in options:
       if '_COLOR' in opt:
         key = options[opt]
@@ -153,17 +177,6 @@ class DailyAgenda(object):
           options[opt] = self._cmap[options[opt]]
         else:
           options[opt] = self._cmap['black']
-
-    # convert to attributes
-    self._opts = Options(options)
-
-    # path to images
-    pgm_dir = os.path.dirname(os.path.realpath(__file__))
-    img_dir = os.path.realpath(os.path.join(pgm_dir,"..",
-                                            "share","pi-e-ink-daily"))
-
-    self.NO_CONNECT = os.path.join(img_dir,self._opts.no_server_connection)
-    self.NO_EVENTS  = os.path.join(img_dir,self._opts.no_events)
 
   # --- create fonts   -----------------------------------------------------
 
