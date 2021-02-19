@@ -1,0 +1,8 @@
+{
+  "comment"      : "see source code if in doubt about settings",
+
+  "owm_latitude"  : 48.135125,
+  "owm_longitude" : 11.581981,
+  "owm_apikey"    : "undef"
+
+}

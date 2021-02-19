@@ -1,0 +1,23 @@
+{
+  "comment"      : "see source code if in doubt about settings",
+
+  "TIME_FONT"    : "/usr/share/fonts/truetype/dejavu/DejaVuSerif-BoldItalic.ttf",
+  "TIME_COLOR"   : "black",
+  "TIME_SIZE"    : 18,
+
+  "cals" : [ {
+            "dav_url"      : "https://example.com/caldav.php",
+            "dav_user"     : "somebody",
+            "dav_pw"       : "somebodies_password",
+            "cal_name"     : "mycal_1",
+            "cal_color"    : "white"
+           },
+            {
+            "dav_url"      : "https://example.com/caldav2.php",
+            "dav_user"     : "somebody2",
+            "dav_pw"       : "somebody2_password",
+            "cal_name"     : "mycal_2",
+            "cal_color"    : "gray"
+           }
+         ]
+}
