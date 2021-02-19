@@ -19,6 +19,8 @@ class ContentProvider(object):
   def __init__(self,screen):
     """ save screen object """
     self.screen = screen
+    self.opts   = screen._opts
+    self.canvas = screen._canvas
 
   # --- draw content on screen   ---------------------------------------------
 
