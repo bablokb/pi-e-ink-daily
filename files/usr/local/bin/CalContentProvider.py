@@ -18,6 +18,8 @@ import datetime
 import traceback
 from operator import itemgetter
 
+from PIL import ImageFont
+
 from ContentProvider import ContentProvider
 
 class CalContentProvider(ContentProvider):
@@ -35,6 +37,14 @@ class CalContentProvider(ContentProvider):
     return int((self.opts.HEIGHT-
                 self.opts.HEIGHT_S-self.screen._y_off)/
                                                     self.opts.HEIGHT_E)
+
+  # --- create fonts   -----------------------------------------------------
+
+  def create_fonts(self):
+    """ create fonts """
+
+    self._time_font   = ImageFont.truetype(self.opts.TIME_FONT,
+                                          self.opts.TIME_SIZE)
 
   # --- read agendas from caldav-servers   ------------------------------------
 
@@ -135,15 +145,15 @@ class CalContentProvider(ContentProvider):
     # time-value
     tm      = e_time.split('-')
     tm_size = [0,0]
-    tm_size[0] = self.canvas.textsize(tm[0],self.screen._time_font,spacing=0)
-    tm_size[1] = self.canvas.textsize(tm[1],self.screen._time_font,spacing=0)
+    tm_size[0] = self.canvas.textsize(tm[0],self._time_font,spacing=0)
+    tm_size[1] = self.canvas.textsize(tm[1],self._time_font,spacing=0)
     if e_time != "00:00-23:59":
       # only print time for none full-day events
       self.canvas.text((self.opts.MARGINS[2],self.screen._y_off+2),
-                        tm[0],font=self.screen._time_font,
+                        tm[0],font=self._time_font,
                         fill=self.screen._bg_map[e_color])
       self.canvas.text((self.opts.MARGINS[2],self.screen._y_off+4+tm_size[0][1]),
-                        tm[1],font=self.screen._time_font,
+                        tm[1],font=self._time_font,
                         fill=self.screen._bg_map[e_color])
 
     # text (2 lines)
