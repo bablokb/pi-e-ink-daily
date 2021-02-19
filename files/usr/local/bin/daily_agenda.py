@@ -77,17 +77,19 @@ class DailyAgenda(object):
     # read settings. This has to be done twice: the first
     # time to query the content-provider, the second time
     # to overwrite default settings of content-provider
-    self._opts = {}
-    self._read_settings()
-    self._get_content_provider()
-    self.provider.read_settings()
-    self._read_settings()
-    self._opts = Options(self._opts)     # convert to attributes
+    opts = {}
+    self._read_settings(opts)
+    self._get_content_provider(opts["content_provider"])
+    self.provider.read_settings(opts)
+    self._read_settings(opts)
+    self._opts = Options(opts)          # convert to attributes
+    self.provider.set_options(self._opts)
 
     # drawing objects
     self._create_color_maps()            # create color-maps
     self._map_colors()
     self._create_fonts()
+    self.provider.create_fonts()
 
     # path to images
     pgm_dir = os.path.dirname(os.path.realpath(__file__))
@@ -117,11 +119,11 @@ class DailyAgenda(object):
 
   # --- load content provider   ----------------------------------------------
 
-  def _get_content_provider(self):
+  def _get_content_provider(self,provider_class):
     """ load content provider """
 
-    mod = __import__(self._opts["content_provider"])
-    klass = getattr(mod,self._opts["content_provider"])
+    mod = __import__(provider_class)
+    klass = getattr(mod,provider_class)
     self.provider = klass(self)
 
   # --- create color-maps   --------------------------------------------------
@@ -154,15 +156,15 @@ class DailyAgenda(object):
 
   # --- read settings from config-file   -------------------------------------
 
-  def _read_settings(self):
+  def _read_settings(self,opts):
     """ read settings from /etc/pi-e-ink-daily.json """
 
     if os.path.exists(CONFIG_FILE_DEFAULT):
       with open(CONFIG_FILE_DEFAULT,"r") as f:
-        self._opts.update(json.load(f))
+        opts.update(json.load(f))
     if os.path.exists(CONFIG_FILE):
       with open(CONFIG_FILE,"r") as f:
-        self._opts.update(json.load(f))
+        opts.update(json.load(f))
 
   # --- create color-maps   --------------------------------------------------
 
@@ -187,8 +189,6 @@ class DailyAgenda(object):
                                           self._opts.TITLE_SIZE)
     self._day_font    = ImageFont.truetype(self._opts.DAY_FONT,
                                           self._opts.DAY_SIZE)
-    self._time_font   = ImageFont.truetype(self._opts.TIME_FONT,
-                                          self._opts.TIME_SIZE)
     self._text_font   = ImageFont.truetype(self._opts.TEXT_FONT,
                                           self._opts.TEXT_SIZE)
     self._status_font = ImageFont.truetype(self._opts.STATUS_FONT,
