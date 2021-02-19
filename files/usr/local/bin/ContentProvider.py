@@ -12,7 +12,11 @@
 #
 # ----------------------------------------------------------------------------
 
+import os, json
+
 class ContentProvider(object):
+
+  CONFIG_FILE_DEFAULT = "/etc/pi-e-ink-daily.{}.defaults.json"
 
   # --- constructor   --------------------------------------------------------
   
@@ -20,6 +24,17 @@ class ContentProvider(object):
     """ save screen object """
     self.screen = screen
     self.opts   = screen._opts
+
+  # --- read default settings for content-provider   -------------------------
+
+  def read_settings(self):
+    """ read settings """
+
+    config_file = ContentProvider.CONFIG_FILE_DEFAULT.format(
+                                                      self.__class__.__name__)
+    if os.path.exists(config_file):
+      with open(config_file,"r") as f:
+        self.opts.update(json.load(f))
 
   # --- set canvas-property   ------------------------------------------------
 
