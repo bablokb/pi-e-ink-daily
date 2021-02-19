@@ -16,7 +16,7 @@
 #
 # ----------------------------------------------------------------------------
 
-import requests
+import requests, traceback
 
 from ContentProvider import ContentProvider
 from OWMData         import OWMData
