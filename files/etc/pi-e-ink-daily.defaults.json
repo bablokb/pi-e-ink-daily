@@ -27,10 +27,6 @@
   "DAY_COLOR_BG" : "black",
   "DAY_COLOR_BG7": "red",
 
-  "TIME_FONT"    : "/usr/share/fonts/truetype/dejavu/DejaVuSerif-BoldItalic.ttf",
-  "TIME_COLOR"   : "black",
-  "TIME_SIZE"    : 18,
-
   "TEXT_FONT"    : "/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf",
   "TEXT_COLOR"   : "black",
   "TEXT_SIZE"    : 18,
@@ -46,26 +42,5 @@
   "BAT_LOW_TEXT" : "\u25AF\u25AF\u25AF",
   "BAT_LOW_COLOR": "red",
 
-  "LINE_COLOR"   : "black",
-
-  "cals" : [ {
-            "dav_url"      : "https://example.com/caldav.php",
-            "dav_user"     : "somebody",
-            "dav_pw"       : "somebodies_password",
-            "cal_name"     : "mycal_1",
-            "cal_color"    : "white"
-           },
-            {
-            "dav_url"      : "https://example.com/caldav2.php",
-            "dav_user"     : "somebody2",
-            "dav_pw"       : "somebody2_password",
-            "cal_name"     : "mycal_2",
-            "cal_color"    : "gray"
-           }
-         ],
-
-  "owm_latitude"  : 48.135125,
-  "owm_longitude" : 11.581981,
-  "owm_apikey"    : "undef"
-
+  "LINE_COLOR"   : "black"
 }
