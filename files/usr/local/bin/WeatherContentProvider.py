@@ -18,16 +18,46 @@
 
 import requests, traceback
 
+from PIL import ImageFont
+
 from ContentProvider import ContentProvider
 from OWMData         import OWMData
 
 class WeatherContentProvider(ContentProvider):
+
+  ID_MAP1 = {
+    '201': '6',  # THUNDER RAIN
+    '202': '7',  # THUNDER HARD RAIN
+    '502': '4',  # HARD RAIN
+    '503': '4',  # HARD RAIN
+    '504': '4',  # HARD RAIN
+    '522': '4',  # HARD RAIN
+    '800': '1',  # SUN
+    '801': '9',  # SUN AND CLOUD
+    '802': '9',  # SUN AND CLOUD
+    '803': '9',  # SUN AND CLOUD
+    '804': '2'   # CLOUD
+    }
+  ID_MAP2 = {
+    '2': '8',    # THUNDER
+    '3': '3',    # RAIN
+    '5': '3',    # RAIN
+    '6': '5'     # SNOW
+    }
 
   # --- constructor   --------------------------------------------------------
   
   def __init__(self,screen):
     """ constructor """
     super(WeatherContentProvider,self).__init__(screen)
+
+  # --- create fonts   -----------------------------------------------------
+
+  def create_fonts(self):
+    """ create fonts """
+
+    self._dseg_font   = ImageFont.truetype(self.opts.DSEG_FONT,
+                                          self.opts.DSEG_SIZE)
 
   # --- calculate available space for tiles   --------------------------------
 
@@ -40,6 +70,21 @@ class WeatherContentProvider(ContentProvider):
     width3 = int(self.opts.WIDTH/3)
     width4 = int(self.opts.WIDTH/4)
     self._sizes = ((width3,height),(width4,height))
+
+  # --- map weather-id to char of DSEG-font   --------------------------------
+
+  def _map_id(self,id):
+    """ map weather-id to char of DSEG-font """
+
+    code = str(id)
+    # try specific code first
+    if code in WeatherContentProvider.ID_MAP1:
+      return WeatherContentProvider.ID_MAP1[code]
+    # try generic code
+    if code[0] in WeatherContentProvider.ID_MAP2:
+      return WeatherContentProvider.ID_MAP2[code]
+    # otherwise return default ("nothing")
+      return ':'
 
   # --- draw hourly forecast   -----------------------------------------------
 
@@ -57,10 +102,17 @@ class WeatherContentProvider(ContentProvider):
     t = "{0:3.1f}°".format(hour.temp)
     t_size = self.canvas.textsize(t,self.screen._text_font,spacing=0)
     x_plus = int((self._sizes[0][0]-t_size[0])/2)
-    self.canvas.text((x_off+x_plus,y_off+t_size[1]+1),
+    self.canvas.text((x_off+x_plus,y_off+h_size[1]+1),
                      t,font=self.screen._text_font,
                      fill=self.opts.TEXT_COLOR)
-    
+    # icon
+    icon = self._map_id(hour.id)
+    icon_size = self.canvas.textsize(icon,self._dseg_font,spacing=0)
+    x_plus = int((self._sizes[0][0]-icon_size[0])/2)
+    self.canvas.text((x_off+x_plus,y_off+h_size[1]+1+t_size[1]+1),
+                     icon,font=self._dseg_font,
+                     fill=self.opts.DSEG_COLOR)
+
   # --- draw daily forecast   ------------------------------------------------
 
   def _draw_day(self,day,x_off,y_off):
@@ -77,9 +129,16 @@ class WeatherContentProvider(ContentProvider):
     t = "{0:d}°/{1:d}°".format(round(day.tmin),round(day.tmax))
     t_size = self.canvas.textsize(t,self.screen._text_font,spacing=0)
     x_plus = int((self._sizes[1][0]-t_size[0])/2)
-    self.canvas.text((x_off+x_plus,y_off+t_size[1]+1),
+    self.canvas.text((x_off+x_plus,y_off+d_size[1]+1),
                      t,font=self.screen._text_font,
                      fill=self.opts.TEXT_COLOR)
+    # icon
+    icon = self._map_id(day.id)
+    icon_size = self.canvas.textsize(icon,self._dseg_font,spacing=0)
+    x_plus = int((self._sizes[1][0]-icon_size[0])/2)
+    self.canvas.text((x_off+x_plus,y_off+d_size[1]+1+t_size[1]+1),
+                     icon,font=self._dseg_font,
+                     fill=self.opts.DSEG_COLOR)
     
 
   # --- draw content on screen   ---------------------------------------------
