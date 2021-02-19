@@ -1,8 +1,11 @@
 {
   "comment"      : "see source code if in doubt about settings",
 
+  "DSEG_FONT"    : "/usr/share/fonts/DSEG/DSEGWeather/DSEGWeather.ttf",
+  "DSEG_COLOR"   : "black",
+  "DSEG_SIZE"    : 84,
+
   "owm_latitude"  : 48.135125,
   "owm_longitude" : 11.581981,
   "owm_apikey"    : "undef"
-
 }
