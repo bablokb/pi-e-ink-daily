@@ -20,7 +20,11 @@ class ContentProvider(object):
     """ save screen object """
     self.screen = screen
     self.opts   = screen._opts
-    self.canvas = screen._canvas
+
+  # --- set canvas-property   ------------------------------------------------
+
+  def set_canvas(self,canvas):
+    self.canvas = canvas
 
   # --- draw content on screen   ---------------------------------------------
 
