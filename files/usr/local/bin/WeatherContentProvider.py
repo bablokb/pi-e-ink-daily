@@ -161,11 +161,24 @@ class WeatherContentProvider(ContentProvider):
 
     self._calc_tile_sizes()
 
-    # hourly forecast
+    # hourly forecast: three hours between 08:00 and 21:00
+    h_now = owm.current.dt.hour
+    if h_now < 18:
+      h_min = max(h_now,8)
+      h_max = min(h_min+12,21)
+      h_mid = int((h_min+h_max)/2)
+    elif h_now < 21:
+      h_min = max(h_now,8)
+      h_max = min(h_min+12,23)
+      h_mid = int((h_min+h_max)/2)
+    else:
+      h_min = 21
+      h_mid = 22
+      h_max = 23
     x_off  = 0
     y_off  = self.screen._y_off
     height = self._sizes[0][1]
-    for i in range(1,4):
+    for i in [h_min-h_now,h_mid-h_now,h_max-h_now]:
       self._draw_hour(owm.hours[i],x_off,y_off)
       x_off += self._sizes[0][0]
       self.canvas.line([(x_off,y_off),
