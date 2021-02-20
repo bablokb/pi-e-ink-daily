@@ -5,6 +5,10 @@
   "DSEG_COLOR"   : "black",
   "DSEG_SIZE"    : 84,
 
+  "BIG_FONT"    : "/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf",
+  "BIG_COLOR"   : "gray",
+  "BIG_SIZE"    : 84,
+
   "owm_latitude"  : 48.135125,
   "owm_longitude" : 11.581981,
   "owm_apikey"    : "undef"
