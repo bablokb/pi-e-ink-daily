@@ -56,8 +56,10 @@ class WeatherContentProvider(ContentProvider):
   def create_fonts(self):
     """ create fonts """
 
-    self._dseg_font   = ImageFont.truetype(self.opts.DSEG_FONT,
-                                          self.opts.DSEG_SIZE)
+    self._dseg_font = ImageFont.truetype(self.opts.DSEG_FONT,
+                                         self.opts.DSEG_SIZE)
+    self._big_font  = ImageFont.truetype(self.opts.BIG_FONT,
+                                         self.opts.BIG_SIZE)
 
   # --- calculate available space for tiles   --------------------------------
 
@@ -81,9 +83,22 @@ class WeatherContentProvider(ContentProvider):
       return WeatherContentProvider.ID_MAP1[code]
     # try generic code
     if code[0] in WeatherContentProvider.ID_MAP2:
-      return WeatherContentProvider.ID_MAP2[code]
+      return WeatherContentProvider.ID_MAP2[code[0]]
     # otherwise return default ("nothing")
       return ':'
+
+  # --- draw current temperature   -------------------------------------------
+
+  def _draw_current(self,cur,x_off,y_off):
+    """ draw current temperature """
+
+    t = "{0:3.1f}°".format(cur.temp)
+    t_size = self.canvas.textsize(t,self._big_font,spacing=0)
+    x_plus = int((self._size[0]-t_size[0])/2)
+    y_plus = int((self._size[1]-t_size[1])/2)
+    self.canvas.text((x_off+x_plus,y_off+y_plus),
+                     t,font=self._big_font,
+                     fill=self.opts.BIG_COLOR)
 
   # --- draw hourly forecast   -----------------------------------------------
 
@@ -160,6 +175,16 @@ class WeatherContentProvider(ContentProvider):
 
     self._calc_tile_sizes()
 
+    # current temperature
+    height = self._size[1]
+    x_off = 0
+    y_off = self.screen._y_off
+    self._draw_current(owm.current,x_off,y_off)
+    x_off += self._size[0]
+    self.canvas.line([(x_off,y_off),
+                      (x_off,y_off+height)],
+                               fill=self.opts.LINE_COLOR,width=1)
+
     # hourly forecast: three hours between 08:00 and 21:00
     h_now = owm.current.dt.hour
     if h_now < 18:
@@ -174,9 +199,7 @@ class WeatherContentProvider(ContentProvider):
       h_min = 21
       h_mid = 22
       h_max = 23
-    x_off  = 0
-    y_off  = self.screen._y_off
-    height = self._size[1]
+
     for i in [h_min-h_now,h_mid-h_now,h_max-h_now]:
       self._draw_hour(owm.hours[i],x_off,y_off)
       x_off += self._size[0]
