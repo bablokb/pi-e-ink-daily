@@ -6,8 +6,8 @@
   "DSEG_SIZE"    : 84,
 
   "BIG_FONT"    : "/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf",
-  "BIG_COLOR"   : "gray",
-  "BIG_SIZE"    : 84,
+  "BIG_COLOR"   : "black",
+  "BIG_SIZE"    : 32,
 
   "owm_latitude"  : 48.135125,
   "owm_longitude" : 11.581981,
