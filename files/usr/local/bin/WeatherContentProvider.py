@@ -26,23 +26,75 @@ from OWMData         import OWMData
 class WeatherContentProvider(ContentProvider):
 
   ID_MAP1 = {
-    '201': '6',  # THUNDER RAIN
-    '202': '7',  # THUNDER HARD RAIN
-    '502': '4',  # HARD RAIN
-    '503': '4',  # HARD RAIN
-    '504': '4',  # HARD RAIN
-    '522': '4',  # HARD RAIN
-    '800': '1',  # SUN
-    '801': '9',  # SUN AND CLOUD
-    '802': '9',  # SUN AND CLOUD
-    '803': '9',  # SUN AND CLOUD
-    '804': '2'   # CLOUD
+    200: "\uf01e",   #thunderstorm
+    201: "\uf01e",   #thunderstorm
+    202: "\uf01e",   #thunderstorm
+    210: "\uf016",   #lightning
+    211: "\uf016",   #lightning
+    212: "\uf016",   #lightning
+    221: "\uf016",   #lightning
+    230: "\uf01e",   #thunderstorm
+    231: "\uf01e",   #thunderstorm
+    232: "\uf01e",   #thunderstorm
+    300: "\uf01c",   #sprinkle
+    301: "\uf01c",   #sprinkle
+    302: "\uf019",   #rain
+    310: "\uf017",   #rain-mix
+    311: "\uf019",   #rain
+    312: "\uf019",   #rain
+    313: "\uf01a",   #showers
+    314: "\uf019",   #rain
+    321: "\uf01c",   #sprinkle
+    500: "\uf01b",   #light rain
+    501: "\uf01a",   #moderate rain
+    502: "\uf015",   #heavy intense rain
+    503: "\uf019",   #very heavy rain
+    504: "\uf018",   #extreme rain
+    511: "\uf017",   #freezing rain
+    520: "\uf01c",   #light intensity showers
+    521: "\uf01a",   #rain showers
+    522: "\uf015",   #heavy rain showers
+    531: "\uf01d",   #storm-showers
+    600: "\uf01b",   #light snow
+    601: "\uf01a",   #snow
+    602: "\uf015",   #heavy snow
+    611: "\uf017",   #sleet
+    612: "\uf017",   #light shower sleet
+    612: "\uf017",   #shower sleet
+    615: "\uf017",   #light rain and snow
+    616: "\uf017",   #rain and snow
+    620: "\uf017",   #light shower snow
+    621: "\uf01b",   #shower snow
+    622: "\uf01b",   #heavy shower snow
+    701: "\uf014",   #mist
+    711: "\uf062",   #smoke
+    721: "\uf063",   #haze
+    731: "\uf063",   #dust
+    741: "\uf021",   #fog
+    751: "\uf063",   #sand
+    761: "\uf063",   #dust
+    762: "\uf063",   #dust
+    771: "\uf014",   #squalls
+    781: "\uf056",   #tornado
+    800: "\uf00d",   #sunny
+    801: "\uf041",   #cloud
+    802: "\uf00c",   #clouds  25-50%
+    803: "\uf002",   #clouds  51-84%
+    804: "\uf013",   #clouds  85-100%
+    900: "\uf056",   #tornado
+    901: "\uf01d",   #storm-showers
+    902: "\uf073",   #hurricane
+    903: "\uf076",   #snowflake-cold
+    904: "\uf055",   #hot
+    905: "\uf021",   #windy
+    906: "\uf015",   #hail
+    957: "\uf050"    #strong-wind
     }
   ID_MAP2 = {
-    '2': '8',    # THUNDER
-    '3': '3',    # RAIN
-    '5': '3',    # RAIN
-    '6': '5'     # SNOW
+    '2': "\uf01e",   #thunderstorm
+    '3': "\uf019",   #rain
+    '5': "\uf019",   #rain
+    '6': "\uf01b"    #snow
     }
 
   # --- constructor   --------------------------------------------------------
@@ -56,8 +108,8 @@ class WeatherContentProvider(ContentProvider):
   def create_fonts(self):
     """ create fonts """
 
-    self._dseg_font = ImageFont.truetype(self.opts.DSEG_FONT,
-                                         self.opts.DSEG_SIZE)
+    self._wi_font = ImageFont.truetype(self.opts.WI_FONT,
+                                         self.opts.WI_SIZE)
     self._big_font  = ImageFont.truetype(self.opts.BIG_FONT,
                                          self.opts.BIG_SIZE)
 
@@ -72,20 +124,21 @@ class WeatherContentProvider(ContentProvider):
     width4 = int(self.opts.WIDTH/4)
     self._size = ((width4,height))
 
-  # --- map weather-id to char of DSEG-font   --------------------------------
+  # --- map weather-id to char of WI-font   --------------------------------
 
   def _map_id(self,id):
-    """ map weather-id to char of DSEG-font """
+    """ map weather-id to char of WI-font """
 
-    code = str(id)
+    print("id: %d" % id)
     # try specific code first
-    if code in WeatherContentProvider.ID_MAP1:
-      return WeatherContentProvider.ID_MAP1[code]
+    if id in WeatherContentProvider.ID_MAP1:
+      return WeatherContentProvider.ID_MAP1[id]
     # try generic code
-    if code[0] in WeatherContentProvider.ID_MAP2:
-      return WeatherContentProvider.ID_MAP2[code[0]]
-    # otherwise return default ("nothing")
-      return ':'
+    code = str(id)[0]
+    if code in WeatherContentProvider.ID_MAP2:
+      return WeatherContentProvider.ID_MAP2[code]
+    # otherwise return default ("n/a")
+      return "\uf07b"
 
   # --- draw current temperature   -------------------------------------------
 
@@ -121,11 +174,11 @@ class WeatherContentProvider(ContentProvider):
                      fill=self.opts.TEXT_COLOR)
     # icon
     icon = self._map_id(hour.id)
-    icon_size = self.canvas.textsize(icon,self._dseg_font,spacing=0)
+    icon_size = self.canvas.textsize(icon,self._wi_font,spacing=0)
     x_plus = int((self._size[0]-icon_size[0])/2)
     self.canvas.text((x_off+x_plus,y_off+h_size[1]+1+t_size[1]+1),
-                     icon,font=self._dseg_font,
-                     fill=self.opts.DSEG_COLOR)
+                     icon,font=self._wi_font,
+                     fill=self.opts.WI_COLOR)
 
   # --- draw daily forecast   ------------------------------------------------
 
@@ -148,11 +201,11 @@ class WeatherContentProvider(ContentProvider):
                      fill=self.opts.TEXT_COLOR)
     # icon
     icon = self._map_id(day.id)
-    icon_size = self.canvas.textsize(icon,self._dseg_font,spacing=0)
+    icon_size = self.canvas.textsize(icon,self._wi_font,spacing=0)
     x_plus = int((self._size[0]-icon_size[0])/2)
     self.canvas.text((x_off+x_plus,y_off+d_size[1]+1+t_size[1]+1),
-                     icon,font=self._dseg_font,
-                     fill=self.opts.DSEG_COLOR)
+                     icon,font=self._wi_font,
+                     fill=self.opts.WI_COLOR)
     
 
   # --- draw content on screen   ---------------------------------------------

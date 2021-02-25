@@ -1,9 +1,9 @@
 {
   "comment"      : "see source code if in doubt about settings",
 
-  "DSEG_FONT"    : "/usr/share/fonts/DSEG/DSEGWeather/DSEGWeather.ttf",
-  "DSEG_COLOR"   : "black",
-  "DSEG_SIZE"    : 84,
+  "WI_FONT"    : "/usr/share/fonts/weathericons-regular-webfont.ttf",
+  "WI_COLOR"   : "black",
+  "WI_SIZE"    : 46,
 
   "BIG_FONT"    : "/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf",
   "BIG_COLOR"   : "black",
