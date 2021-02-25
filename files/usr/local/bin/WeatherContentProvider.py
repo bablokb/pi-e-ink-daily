@@ -241,17 +241,17 @@ class WeatherContentProvider(ContentProvider):
     # hourly forecast: three hours between 08:00 and 21:00
     h_now = owm.current.dt.hour
     if h_now < 18:
-      h_min = max(h_now,8)
+      h_min = max(h_now+1,8)
       h_max = min(h_min+12,21)
       h_mid = int((h_min+h_max)/2)
     elif h_now < 21:
-      h_min = max(h_now,8)
+      h_min = max(h_now+1,8)
       h_max = min(h_min+12,23)
       h_mid = int((h_min+h_max)/2)
     else:
-      h_min = 21
-      h_mid = 22
-      h_max = 23
+      h_min = h_now + 1
+      h_mid = h_min + 1
+      h_max = h_mid + 1
 
     for i in [h_min-h_now,h_mid-h_now,h_max-h_now]:
       self._draw_hour(owm.hours[i],x_off,y_off)
