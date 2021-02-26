@@ -248,9 +248,9 @@ class WeatherContentProvider(ContentProvider):
       h_max = min(h_min+12,23)
       h_mid = int((h_min+h_max)/2)
     else:
-      h_min = h_now + 1
-      h_mid = h_min + 1
-      h_max = h_mid + 1
+      h_min = 32   # 08:00 next day
+      h_mid = 38   # 14:00 next day
+      h_max = 44   # 20:00 next day
 
     for i in [h_min-h_now,h_mid-h_now,h_max-h_now]:
       self._draw_hour(owm.hours[i],x_off,y_off)
