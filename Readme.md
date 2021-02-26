@@ -184,3 +184,10 @@ This allows using some of the Impression keys:
 |GPIO23 |  -   | -           | drive high: attach external LED
 
 (*) bottom left
+
+
+Weather-Icons
+-------------
+
+The weather icons are licensed under SIL OFL 1.1, courtesy of
+Eric Flowers [https://github.com/erikflowers/weather-icons](https://github.com/erikflowers/weather-icons).
