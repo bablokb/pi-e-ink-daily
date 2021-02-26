@@ -96,6 +96,16 @@ class WeatherContentProvider(ContentProvider):
     '5': "\uf019",   #rain
     '6': "\uf01b"    #snow
     }
+  DIR_MAP = {
+    "N":  "\uF060",
+    "NE": "\uF05E",
+    "E":  "\uF061",
+    "SE": "\uF05B",
+    "S":  "\uF05C",
+    "SW": "\uF05A",
+    "W":  "\uF059",
+    "NW": "\uF05D"
+    }
 
   # --- constructor   --------------------------------------------------------
   
@@ -108,8 +118,12 @@ class WeatherContentProvider(ContentProvider):
   def create_fonts(self):
     """ create fonts """
 
+    # weather-icons
     self._wi_font = ImageFont.truetype(self.opts.WI_FONT,
                                          self.opts.WI_SIZE)
+    # wind-direction icons
+    self._wdir_font = ImageFont.truetype(self.opts.WDIR_FONT,
+                                         self.opts.WDIR_SIZE)
     self._big_font  = ImageFont.truetype(self.opts.BIG_FONT,
                                          self.opts.BIG_SIZE)
 
@@ -144,13 +158,29 @@ class WeatherContentProvider(ContentProvider):
   def _draw_current(self,cur,x_off,y_off):
     """ draw current temperature """
 
+    # current temperature
     t = "{0:3.1f}°".format(cur.temp)
     t_size = self.canvas.textsize(t,self._big_font,spacing=0)
     x_plus = int((self._size[0]-t_size[0])/2)
-    y_plus = int((self._size[1]-t_size[1])/2)
-    self.canvas.text((x_off+x_plus,y_off+y_plus),
+    self.canvas.text((x_off+x_plus,y_off),
                      t,font=self._big_font,
                      fill=self.opts.BIG_COLOR)
+
+    # wind direction icon
+    icon = self.DIR_MAP[cur.wind_dir]
+    icon_size = self.canvas.textsize(icon,self._wdir_font,spacing=0)
+    x_plus = int((self._size[0]-icon_size[0])/2)
+    self.canvas.text((x_off+x_plus,y_off+t_size[1]+1),
+                     icon,font=self._wdir_font,
+                     fill=self.opts.WDIR_COLOR)
+
+    # wind speed
+    s = "{0:d} m/s".format(round(cur.wind_speed))
+    s_size = self.canvas.textsize(s,self.screen._text_font,spacing=0)
+    x_plus = int((self._size[0]-s_size[0])/2)
+    self.canvas.text((x_off+x_plus,y_off+t_size[1]+1+icon_size[1]+1),
+                     s,font=self.screen._text_font,
+                     fill=self.opts.TEXT_COLOR)
 
   # --- draw hourly forecast   -----------------------------------------------
 
