@@ -1,0 +1,27 @@
+#!/bin/bash
+# --------------------------------------------------------------------------
+# This script changes the service-definition and enables a timer.
+#
+# Author: Bernhard Bablok
+# License: GPL3
+#
+# Website: https://github.com/bablokb/pi-e-ink-daily
+#
+# --------------------------------------------------------------------------
+
+# remove unneeded configs from service-definition
+echo -e "[INFO] changing pi-e-ink-daily.service" 2>&1
+sed -i -e "/check_admin_mode/s/^/#/" -e "/poweroff/s/^/#/" \
+       -e "/RemainAfterExit/s/^/#/" /etc/systemd/system/pi-e-ink-daily.service
+
+# stop service and enable timer
+echo -e "[INFO] reload daemon and enable timer for pi-e-ink-daily.service" 2>&1
+systemctl daemon-reload
+systemctl stop   pi-e-ink-daily.service
+systemctl enable pi-e-ink-daily.timer
+
+# don't start timer automatically, since a reboot is usually needed after
+# first install
+#systemctl start  pi-e-ink-daily.timer
+
+echo -e "[INFO] start timer manually or reboot your system" 2>&1
