@@ -5,6 +5,10 @@
   "WI_COLOR"   : "black",
   "WI_SIZE"    : 46,
 
+  "WDIR_FONT"    : "/usr/share/fonts/weathericons-regular-webfont.ttf",
+  "WDIR_COLOR"   : "black",
+  "WDIR_SIZE"    : 40,
+
   "BIG_FONT"    : "/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf",
   "BIG_COLOR"   : "black",
   "BIG_SIZE"    : 32,
