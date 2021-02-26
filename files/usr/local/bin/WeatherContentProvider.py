@@ -45,10 +45,10 @@ class WeatherContentProvider(ContentProvider):
     313: "\uf01a",   #showers
     314: "\uf019",   #rain
     321: "\uf01c",   #sprinkle
-    500: "\uf01b",   #light rain
-    501: "\uf01a",   #moderate rain
+    500: "\uf019",   #light rain
+    501: "\uf019",   #moderate rain
     502: "\uf015",   #heavy intense rain
-    503: "\uf019",   #very heavy rain
+    503: "\uf018",   #very heavy rain
     504: "\uf018",   #extreme rain
     511: "\uf017",   #freezing rain
     520: "\uf01c",   #light intensity showers
@@ -56,16 +56,16 @@ class WeatherContentProvider(ContentProvider):
     522: "\uf015",   #heavy rain showers
     531: "\uf01d",   #storm-showers
     600: "\uf01b",   #light snow
-    601: "\uf01a",   #snow
-    602: "\uf015",   #heavy snow
-    611: "\uf017",   #sleet
+    601: "\uf01b",   #snow
+    602: "\uf064",   #heavy snow
+    611: "\uf0b5",   #sleet
     612: "\uf017",   #light shower sleet
     612: "\uf017",   #shower sleet
     615: "\uf017",   #light rain and snow
     616: "\uf017",   #rain and snow
-    620: "\uf017",   #light shower snow
+    620: "\uf01b",   #light shower snow
     621: "\uf01b",   #shower snow
-    622: "\uf01b",   #heavy shower snow
+    622: "\uf064",   #heavy shower snow
     701: "\uf014",   #mist
     711: "\uf062",   #smoke
     721: "\uf063",   #haze
@@ -129,7 +129,6 @@ class WeatherContentProvider(ContentProvider):
   def _map_id(self,id):
     """ map weather-id to char of WI-font """
 
-    print("id: %d" % id)
     # try specific code first
     if id in WeatherContentProvider.ID_MAP1:
       return WeatherContentProvider.ID_MAP1[id]
