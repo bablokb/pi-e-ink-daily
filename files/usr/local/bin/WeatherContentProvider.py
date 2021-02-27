@@ -268,19 +268,21 @@ class WeatherContentProvider(ContentProvider):
                                fill=self.opts.LINE_COLOR,width=1)
 
     # hourly forecast: three hours between 08:00 and 21:00
-    h_now = owm.current.dt.hour
+    h_now   = owm.current.dt.hour
+    day_off = 1
     if h_now < 18:
       h_min = max(h_now+1,8)
       h_max = min(h_min+12,21)
       h_mid = int((h_min+h_max)/2)
     elif h_now < 21:
-      h_min = max(h_now+1,8)
-      h_max = min(h_min+12,23)
+      h_min = h_now+1
+      h_max = 23
       h_mid = int((h_min+h_max)/2)
     else:
-      h_min = 32   # 08:00 next day
-      h_mid = 38   # 14:00 next day
-      h_max = 44   # 20:00 next day
+      h_min   = 32   # 08:00 next day
+      h_mid   = 38   # 14:00 next day
+      h_max   = 44   # 20:00 next day
+      day_off = 2    # increase day-offset
 
     for i in [h_min-h_now,h_mid-h_now,h_max-h_now]:
       self._draw_hour(owm.hours[i],x_off,y_off)
@@ -296,7 +298,7 @@ class WeatherContentProvider(ContentProvider):
     x_off = 0
     y_off  = self.screen._y_off
     height = self._size[1]
-    for i in range(1,5):
+    for i in range(day_off,4+day_off):
       self._draw_day(owm.days[i],x_off,y_off)
       x_off += self._size[0]
       self.canvas.line([(x_off,y_off),
