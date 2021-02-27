@@ -175,10 +175,10 @@ class WeatherContentProvider(ContentProvider):
                      fill=self.opts.WDIR_COLOR)
 
     # wind speed
-    s = "{0:d} m/s".format(round(cur.wind_speed))
+    s = "{0:d} km/h".format(round(cur.wind_speed))
     s_size = self.canvas.textsize(s,self.screen._text_font,spacing=0)
     x_plus = int((self._size[0]-s_size[0])/2)
-    self.canvas.text((x_off+x_plus,y_off+t_size[1]+1+icon_size[1]+1),
+    self.canvas.text((x_off+x_plus,y_off+t_size[1]+1+icon_size[1]+2),
                      s,font=self.screen._text_font,
                      fill=self.opts.TEXT_COLOR)
 

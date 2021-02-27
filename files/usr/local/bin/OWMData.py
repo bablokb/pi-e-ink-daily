@@ -54,7 +54,7 @@ class OWMData(object):
       val.tmax       = wdict["temp"]["max"]
     val.pressure   = wdict["pressure"]
     val.humidity   = wdict["humidity"]
-    val.wind_speed = wdict["wind_speed"]
+    val.wind_speed = wdict["wind_speed"]*3.6       # m/s -> km/h
     val.wind_deg   = wdict["wind_deg"]
     val.wind_dir   = OWMData.DIRECTION[int((int(val.wind_deg)+22.5)/45)]
     val.id         = wdict["weather"][0]["id"]
@@ -98,7 +98,7 @@ class OWMData(object):
     print("Max:      %r °C" % wo.tmax)
     print("Pressure: %r hPa" % wo.pressure)
     print("Humidity: %r%%" % wo.humidity)
-    print("W-speed:  %r m/s" % wo.wind_speed)
+    print("W-speed:  %3.0f km/h" % wo.wind_speed)
     print("W-deg:    %r°" % wo.wind_deg)
     print("W-dir:    %s" % wo.wind_dir)
     print("")
