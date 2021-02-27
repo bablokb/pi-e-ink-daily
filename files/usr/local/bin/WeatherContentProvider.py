@@ -250,10 +250,7 @@ class WeatherContentProvider(ContentProvider):
     except:
       traceback.print_exc()
       self.screen.rc = 3
-
-    if self.screen.rc:
-      self.screen.draw_image(self.screen.NO_CONNECT)
-      return
+      return                             # ignore error, don't update display
 
     self._calc_tile_sizes()
 
