@@ -15,7 +15,7 @@
 import caldav
 import tzlocal
 import datetime
-import traceback
+#import traceback
 from operator import itemgetter
 
 from PIL import ImageFont
@@ -182,8 +182,8 @@ class CalContentProvider(ContentProvider):
     try:
       entries = self._get_agenda()
     except:
-      traceback.print_exc()
-      self.screen.rc = 3
+      #traceback.print_exc()
+      self.screen.rc = self.screen.RC_FAIL
 
     if self.screen.rc:
       self.screen.draw_image(self.screen.NO_CONNECT)
@@ -195,5 +195,5 @@ class CalContentProvider(ContentProvider):
         if count > self.get_max_entries():
           break
     else:
-      self.screen.draw_image(screen.NO_EVENTS)
+      self.screen.draw_image(self.screen.NO_EVENTS)
 

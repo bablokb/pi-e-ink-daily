@@ -248,8 +248,8 @@ class WeatherContentProvider(ContentProvider):
                     self.opts.owm_apikey)
       owm.update()
     except:
-      traceback.print_exc()
-      self.screen.rc = 3
+      #traceback.print_exc()
+      self.screen.rc = self.screen.RC_NO_UPDATE
       return                             # ignore error, don't update display
 
     self._calc_tile_sizes()

@@ -45,6 +45,10 @@ class Options(object):
 class DailyAgenda(object):
   """ main application class """
 
+  RC_OK        = 0
+  RC_NO_UPDATE = 2
+  RC_FAIL      = 3
+
   # --- constructor   --------------------------------------------------------
 
   def __init__(self):
@@ -115,7 +119,7 @@ class DailyAgenda(object):
     self._canvas = ImageDraw.Draw(self._image)
     self.provider.set_canvas(self._canvas)
     self._y_off  = 0
-    self.rc = 0                   # return-code
+    self.rc = DailyAgenda.RC_OK                   # return-code
 
   # --- load content provider   ----------------------------------------------
 
@@ -334,10 +338,10 @@ if __name__ == '__main__':
   screen.draw_day()
 
   screen.provider.draw_content()
-
-  screen.draw_status()
-  screen.show()
-  if screen._opts.no_shutdown_on_error and screen.rc > 0:
+  if screen.rc != DailyAgenda.RC_NO_UPDATE:
+    screen.draw_status()
+    screen.show()
+  if screen._opts.no_shutdown_on_error and screen.rc > DailyAgend.RC_OK:
     sys.exit(screen.rc)
   elif screen._opts.auto_shutdown:
     sys.exit(0)
