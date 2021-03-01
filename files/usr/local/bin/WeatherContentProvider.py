@@ -3,7 +3,9 @@
 # ----------------------------------------------------------------------------
 # pi-e-ink-daily: daily agenda on a wHat e-ink display
 #
-# Content-provider for the weather forecast from OpenWeatherMap
+# Content-provider for the weather forecast from OpenWeatherMap.
+# This ContentProvider uses the weather-icon-font from
+# https://erikflowers.github.io/weather-icons/
 #
 # This class draws two lines of tiles:
 #   - the first line has four tiles for the current day (now and three hours)
@@ -25,7 +27,10 @@ from OWMData         import OWMData
 
 class WeatherContentProvider(ContentProvider):
 
-  ID_MAP1 = {                   #id: (day,night)
+  # map weather-condition to icon: id: (day,night). Only a few
+  # conditions (cloudy, sunny) map to different night icons, although a
+  # complete set of night-icons would be available
+  ID_MAP1 = {
     200: ("\uf01e","\uf01e"),   #thunderstorm
     201: ("\uf01e","\uf01e"),   #thunderstorm
     202: ("\uf01e","\uf01e"),   #thunderstorm
@@ -76,17 +81,17 @@ class WeatherContentProvider(ContentProvider):
     762: ("\uf063","\uf063"),   #dust
     771: ("\uf014","\uf014"),   #squalls
     781: ("\uf056","\uf056"),   #tornado
-    800: ("\uf00d","\uf00d"),   #sunny
+    800: ("\uf00d","\uf077"),   #sunny !  alternative: f02e: moon, f077: stars
     801: ("\uf041","\uf041"),   #cloud
-    802: ("\uf00c","\uf00c"),   #clouds  25-50%
-    803: ("\uf002","\uf002"),   #clouds  51-84%
+    802: ("\uf00c","\uf083"),   #clouds  25-50% !
+    803: ("\uf002","\uf031"),   #clouds  51-84% !
     804: ("\uf013","\uf013"),   #clouds  85-100%
     900: ("\uf056","\uf056"),   #tornado
     901: ("\uf01d","\uf01d"),   #storm-showers
     902: ("\uf073","\uf073"),   #hurricane
     903: ("\uf076","\uf076"),   #snowflake-cold
     904: ("\uf055","\uf055"),   #hot
-    905: ("\uf021","\uf021"),   #windy
+    905: ("\uf011","\uf011"),   #windy
     906: ("\uf015","\uf015"),   #hail
     957: ("\uf050" "\uf050")    #strong-wind
     }
@@ -140,16 +145,16 @@ class WeatherContentProvider(ContentProvider):
 
   # --- map weather-id to char of WI-font   --------------------------------
 
-  def _map_id(self,id):
+  def _map_id(self,id,isDay=True):
     """ map weather-id to char of WI-font """
 
     # try specific code first
     if id in WeatherContentProvider.ID_MAP1:
-      return WeatherContentProvider.ID_MAP1[id][0]
+      return WeatherContentProvider.ID_MAP1[id][not isDay]
     # try generic code
     code = str(id)[0]
     if code in WeatherContentProvider.ID_MAP2:
-      return WeatherContentProvider.ID_MAP2[code][0]
+      return WeatherContentProvider.ID_MAP2[code][not isDay]
     # otherwise return default ("n/a")
       return "\uf07b"
 
@@ -184,7 +189,7 @@ class WeatherContentProvider(ContentProvider):
 
   # --- draw hourly forecast   -----------------------------------------------
 
-  def _draw_hour(self,hour,x_off,y_off):
+  def _draw_hour(self,current,hour,x_off,y_off):
     """ draw forecast for given hour """
 
     # hour
@@ -202,7 +207,8 @@ class WeatherContentProvider(ContentProvider):
                      t,font=self.screen._text_font,
                      fill=self.opts.TEXT_COLOR)
     # icon
-    icon = self._map_id(hour.id)
+    icon = self._map_id(hour.id,
+                        current.sunrise<hour.dt and hour.dt < current.sunset)
     icon_size = self.canvas.textsize(icon,self._wi_font,spacing=0)
     x_plus = int((self._size[0]-icon_size[0])/2)
     self.canvas.text((x_off+x_plus,y_off+h_size[1]+1+t_size[1]+1),
@@ -282,7 +288,7 @@ class WeatherContentProvider(ContentProvider):
       day_off = 2    # increase day-offset
 
     for i in [h_min-h_now,h_mid-h_now,h_max-h_now]:
-      self._draw_hour(owm.hours[i],x_off,y_off)
+      self._draw_hour(owm.current,owm.hours[i],x_off,y_off)
       x_off += self._size[0]
       self.canvas.line([(x_off,y_off),
                                 (x_off,y_off+height)],
