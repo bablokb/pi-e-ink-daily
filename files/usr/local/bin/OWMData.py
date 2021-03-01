@@ -45,13 +45,18 @@ class OWMData(object):
     val            = Values()
     val.dt         = datetime.datetime.fromtimestamp(wdict["dt"])
     if isinstance(wdict["temp"],(int,float)):
+      # hourly data
       val.temp       = wdict["temp"]
       val.tmin       = wdict["temp"]
       val.tmax       = wdict["temp"]
     else:
+      # current/daily data
       val.temp       = wdict["temp"]["day"]
       val.tmin       = wdict["temp"]["min"]
       val.tmax       = wdict["temp"]["max"]
+    if "sunrise" in wdict:
+      val.sunrise    = datetime.datetime.fromtimestamp(wdict["sunrise"])
+      val.sunset     = datetime.datetime.fromtimestamp(wdict["sunset"])
     val.pressure   = wdict["pressure"]
     val.humidity   = wdict["humidity"]
     val.wind_speed = wdict["wind_speed"]*3.6       # m/s -> km/h
