@@ -288,7 +288,7 @@ class WeatherContentProvider(ContentProvider):
       day_off = 2    # increase day-offset
 
     for i in [h_min-h_now,h_mid-h_now,h_max-h_now]:
-      self._draw_hour(owm.current,owm.hours[i],x_off,y_off)
+      self._draw_hour(owm.days[day_off-1],owm.hours[i],x_off,y_off)
       x_off += self._size[0]
       self.canvas.line([(x_off,y_off),
                                 (x_off,y_off+height)],
