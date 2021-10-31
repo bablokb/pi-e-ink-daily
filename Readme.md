@@ -7,70 +7,32 @@ Overview
 
 This is a project using a Raspberry Pi and an Inky-wHat (3 colors) or
 Inky-Impression (7 colors) from Pimoroni for a display of the daily
-agenda of one or more calendars. Porting to other hardware should be
-straightforward.
-
-The calendars must be accessible via CALDAV, but this is usually the case.
+agenda of one or more calendars (the calendars must be accessible via
+CALDAV, but this is usually the case). Instead of the daily agenda
+the program can display alternate contents, currently it supports
+the weather-forecast using OpenWeatherMap data.
 
 ![](calendar.jpg)
 
+![](weather.jpg)
+
+The system-setup (installation) is described below. To setup the
+hardware and software, skip to the pages
+
+  - [hardware-setup](hardware-setup.md)
+  - [software configuration](configuration.md)
+
 Since an e-ink display keeps its content even after power is turned off,
-the Pi boots, updates the display and shuts down again (see the section
-[Configuration](#Configuration "Configuration"). This repository has all
-the necessary software for this process, including the definition of a
-systemd-service.
-
-E-inks are ideal for battery-based projects, otherwise there is no
-justification for the extra cost and missing functionality of these displays.
-You can find a simple circuit/pcb for the necessary battery-management
-[here](https://github.com/bablokb/pcb-pi-batman):
-
-![](min-pcb-3d.png)
-
-The circuit uses a flip-flop to manage the current-supply from the battery
-to the Pi. A prerequisite is a DC-DC converter with an enable pin. The
-button (or an external device) turns on the Pi by pulling the enable pin high.
-The Pi itself turns of the current after shutdown by pulling the enable
-pin low again.
-
-Adafruit has other nice solutions for this, e.g. an enable timer button
-(works the same way, but powers on every two hours or shorter), or a
-pushbutton power-switch.
-
-
-Hardware
---------
-
-The minimal list of required hardware is short:
-
-  - a Raspberry Pi Zero-W
-  - an Inky-wHAT or Inky-Impression from Pimoroni
-
-Since the e-ink displays only expose GPIO4 (besides I2C and SPI), I
-soldered long pins to the Pi Zero-W to have pins on both sides, so
-every pin not used by the display is available from the back.
-
-Optional components:
-
-  - a LiPo battery
-  - a DC-DC converter (e.g. a PowerBoost 500C from Adafruit)
-  - battery-management pcb (see above)
-  - 3D-printed [stand](https://www.tinkercad.com/things/f5TTT5WoGkW)
+the Pi boots, updates the display and shuts down again. This repository
+has all the necessary software for this process, including the definition
+of a systemd-service. If you are running from a wall-plug, a regular
+update of the display is also possible, see below for details.
 
 A normal update-cycle with some boot-time optimizations takes about one
 minute. System-boot is more than half of this time, another 15 seconds are lost
 during initialization of the python3-interpreter, the update of the
 black&white variant of the wHat takes 8 seconds (the Inky-Impression takes
 three times longer).
-
-Average power-requirement is 115mA (measured for the wHat), so the
-update-cycle draws 2mAh from the battery. A normal 1200mAh LiPo should
-therefore last at least a year with a daily update.
-
-If you use an Inky-Impression, have a look into the sub-directory
-[Inky-Impression-Frame](Inky-Impression-Frame/Readme.md).
-The directory contains the STL-files for a complete slim frame
-for the Impression together with some images of my actual setup.
 
 
 Installation
@@ -103,56 +65,36 @@ The install-command will
     be connected to the battery-management pcb.
 
 
-Configuration
--------------
+Timer-Mode
+----------
 
-Besides a reboot, you also need to configure the program, e.g. the url of
-your calendar. Configuration is via the file `/etc/pi-e-ink-daily.json`.
-Just edit it with a simple editor, the variable-names should be
-self-explanatory. Depending on your system, you might need to edit the
-paths to the fonts, otherwise, you typically only need to edit the
-CALDAV-settings:
+The default install-script will install a systemd-service for the battery-optimized
+boot-update-shutdown cycle. If you run your e-ink from a wall-plug, a different
+scheme is available. Here the systemd-service is triggered every ten minutes by
+a systemd-timer, and no shutdown occurs. To change the interval, edit
+`/etc/systemd/system/pi-e-ink-daily.timer` using
+`sudo systemctl edit pi-e-ink-daily.timer`. This will create an override-file and
+changes won't be overwritten by subsequent updates.
 
-    "dav_url"      : "https://example.com/caldav.php",
-    "dav_user"     : "somebody",
-    "dav_pw"       : "somebodies_password",
-    "cal_name"     : "mycal",
-    "cal_color"    : "white"
+To install this timer-mode, run
 
-Note you can query multiple calendars. Using a different color
-than white or gray for the background of the agenda-entry (`cal_color`)
-is not recommended for a wHat.
+    sudo tools/install-timer
 
-A note on the TITLE-setting:
+after the normal install command. A typical update scenario would then look like this:
 
-    "TITLE" : "",
+    cd pi-e-ink-daily
+    git pull
+    sudo systemctl stop pi-e-ink-daily.timer
+    sudo tools/install
+    sudo tools/install-timer
 
-If this variable is the empty string, the title will show the current month.
-If it starts with a `%`, it will be interpreted as a strftime-spec.
+In timer-mode and if you don't use your Pi for other purposes, it makes sense to
+switch your Pi into *read-only mode*. This can be done using `raspi-config` option
+`4 Performance Options -> P3 Overlay File System`. Once in read-only mode, you can
+just pull the plug any time, there is no need for a clean shutdown anymore.
 
-There are two settings which are only necessary for desktop-simulation:
-
-    "WIDTH"        : 400,
-    "HEIGHT"       : 300,
-
-If the program detects a real inky, it will use the physical dimensions.
-
-
-Shutdown
---------
-
-To configure the __shutdown-behavior__, set the following variables:
-
-    "auto_shutdown"        : 0,
-    "no_shutdown_on_error" : 0,
-
-After initial testing, you would set the first variable to `1` to enable
-automatic shutdown.
-
-If the second variable is set, the system will stay up even if there are
-errors during the update of the calendar, e.g. because the network is not
-available or because the caldav-server has problems. Since this will
-drain your battery, this setting is only recommended for debugging.
+If you need to update the system, you have to switch back to normal mode using
+the same entries within `raspi-config` again.
 
 
 Administration-Mode
